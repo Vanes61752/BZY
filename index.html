@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Calorie & Macros Calculator | Миффлин-Сан Жеор</title>
+    <title>Calorie & Macros Pro | Миффлин-Сан Жеор + Активность</title>
     <style>
         * {
             margin: 0;
@@ -13,285 +13,289 @@
         }
 
         body {
-            background: linear-gradient(145deg, #e0eafc 0%, #cfdef3 100%);
-            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-            padding: 20px 16px 40px;
+            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef5 100%);
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            padding: 24px 16px 48px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* главная карточка — адаптив, ширина ~400px на телефоне */
-        .calculator-card {
-            max-width: 480px;
+        /* главный контейнер — адаптив, ~400-460px */
+        .card {
+            max-width: 500px;
             width: 100%;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.98);
-            border-radius: 40px;
-            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 48px;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.02);
             backdrop-filter: blur(0px);
-            transition: all 0.2s ease;
+            transition: all 0.2s;
+            overflow: hidden;
         }
 
-        /* внутренние отступы */
         .card-inner {
-            padding: 24px 22px 32px;
+            padding: 28px 24px 36px;
         }
 
         /* заголовок */
+        .logo {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
         h1 {
-            font-size: 1.85rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #1f2b3c, #2c3e4e);
+            font-size: 1.9rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, #1c3e55, #2b5f7a);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
-            margin-bottom: 6px;
-            line-height: 1.2;
+            letter-spacing: -0.5px;
         }
-
-        .sub {
+        .badge {
+            background: #eef3fc;
+            padding: 6px 12px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #2c6e9e;
+        }
+        .subhead {
             font-size: 0.85rem;
-            color: #5c6f87;
-            border-left: 3px solid #6c8fb3;
-            padding-left: 10px;
-            margin-bottom: 28px;
+            color: #5b6f87;
+            border-left: 3px solid #3b8fc2;
+            padding-left: 12px;
+            margin: 8px 0 24px 0;
             font-weight: 450;
         }
 
-        /* группа полей */
-        .input-group {
+        /* поля ввода */
+        .field {
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
-
         label {
             font-weight: 600;
-            font-size: 0.9rem;
-            color: #1e2f3e;
+            font-size: 0.85rem;
+            color: #1e3a4d;
+            letter-spacing: -0.2px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
-
         label i {
             font-weight: 400;
-            font-size: 0.85rem;
-            color: #5b7a9a;
+            font-size: 0.8rem;
+            color: #5f8db0;
         }
-
-        /* крупные поля ввода */
         input, select {
             width: 100%;
             padding: 16px 18px;
-            font-size: 1.1rem;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 28px;
-            background-color: #ffffff;
+            font-size: 1rem;
+            border: 1.5px solid #e2edf7;
+            border-radius: 36px;
+            background: #ffffff;
             transition: all 0.2s;
             font-weight: 500;
-            color: #0a1c2a;
+            color: #0a2636;
             outline: none;
             font-family: inherit;
         }
-
         input:focus, select:focus {
-            border-color: #3b7cbf;
-            box-shadow: 0 0 0 3px rgba(59, 124, 191, 0.2);
+            border-color: #2e7eb0;
+            box-shadow: 0 0 0 3px rgba(46, 126, 176, 0.15);
         }
 
-        /* радио группа (пол) */
+        /* радио группа для пола */
         .radio-group {
             display: flex;
-            gap: 24px;
-            background: #f8fafd;
-            padding: 12px 16px;
-            border-radius: 48px;
-            border: 1px solid #e2edf7;
-            margin-top: 5px;
+            gap: 20px;
+            background: #f9fbfe;
+            padding: 10px 16px;
+            border-radius: 60px;
+            border: 1px solid #e6edf6;
         }
-
         .radio-option {
             display: flex;
             align-items: center;
             gap: 10px;
             cursor: pointer;
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
-
         .radio-option input {
-            width: 20px;
-            height: 20px;
-            accent-color: #2c6e9e;
+            width: 18px;
+            height: 18px;
+            accent-color: #2e7eb0;
             margin: 0;
-            padding: 0;
         }
 
-        /* кнопка на всю ширину */
+        /* улучшенный стиль для селекта активности */
+        .activity-select {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233a7ca5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+            background-repeat: no-repeat;
+            background-position: right 18px center;
+            appearance: none;
+        }
+
+        /* кнопка */
         .calc-btn {
             width: 100%;
-            background: linear-gradient(98deg, #1e4b6e, #2c6e9e);
+            background: linear-gradient(105deg, #1f5e83, #2c7fb6);
             border: none;
             padding: 18px 16px;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: white;
             border-radius: 60px;
-            margin-top: 12px;
-            margin-bottom: 28px;
+            margin: 16px 0 28px 0;
             cursor: pointer;
-            transition: transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 8px 18px rgba(0, 30, 50, 0.2);
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 18px rgba(0, 50, 70, 0.2);
             letter-spacing: 0.3px;
         }
-
         .calc-btn:active {
             transform: scale(0.97);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* блок результата */
-        .result-box {
-            background: #f0f6fe;
-            border-radius: 32px;
+        /* блок результата — улучшенный дизайн */
+        .result-card {
+            background: linear-gradient(125deg, #f0f7ff, #ffffff);
+            border-radius: 36px;
             padding: 20px 20px;
-            margin-top: 8px;
-            border: 1px solid #cde1f0;
+            border: 1px solid #cde3f5;
             transition: all 0.2s;
+            box-shadow: 0 5px 12px rgba(0,0,0,0.02);
         }
-
-        .result-title {
+        .result-header {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #1a4c6e;
-            margin-bottom: 16px;
+            color: #1f5779;
             display: flex;
             align-items: center;
             gap: 8px;
-            border-bottom: 2px dashed #b9d2ec;
-            padding-bottom: 8px;
+            border-bottom: 2px solid #caddf0;
+            padding-bottom: 10px;
+            margin-bottom: 18px;
         }
-
-        .macro-grid {
+        .kcal-circle {
+            background: #ffffffcc;
+            border-radius: 34px;
+            padding: 12px 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            backdrop-filter: blur(2px);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
+        }
+        .kcal-value {
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #1c6f9b;
+            letter-spacing: -1px;
+            line-height: 1;
+        }
+        .kcal-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #5887aa;
+        }
+        .macros-grid {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
             gap: 12px;
-            margin-top: 12px;
-        }
-
-        .macro-card {
-            background: white;
-            border-radius: 24px;
-            flex: 1;
-            min-width: 90px;
-            text-align: center;
-            padding: 12px 6px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            border: 1px solid #dfecf5;
-        }
-
-        .macro-value {
-            font-size: 1.65rem;
-            font-weight: 800;
-            color: #1e4663;
-            line-height: 1.2;
-        }
-
-        .macro-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            color: #5d7f9e;
+            justify-content: space-between;
             margin-top: 6px;
         }
-
-        .kcal-display {
-            background: #ffffffd9;
+        .macro-item {
+            flex: 1;
+            background: white;
             border-radius: 28px;
-            padding: 14px 18px;
-            margin-bottom: 18px;
+            padding: 14px 8px;
             text-align: center;
-            box-shadow: inset 0 1px 2px #00000008, 0 2px 5px rgba(0,0,0,0.02);
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e3effa;
+            transition: transform 0.1s;
         }
-
-        .kcal-number {
-            font-size: 2.2rem;
+        .macro-number {
+            font-size: 1.8rem;
             font-weight: 800;
-            color: #1f6392;
-            letter-spacing: -0.5px;
+            color: #1f5779;
         }
-
-        .error-msg {
-            color: #c7254e;
-            background: #ffe6ec;
-            padding: 14px;
-            border-radius: 28px;
-            font-size: 0.9rem;
+        .macro-unit {
+            font-size: 0.8rem;
             font-weight: 500;
-            text-align: center;
-            margin-top: 12px;
+            color: #5b7f9b;
         }
-
+        .macro-name {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-top: 6px;
+            color: #4c6f8c;
+        }
+        .macro-percent {
+            font-size: 0.7rem;
+            color: #7a9cbb;
+            margin-top: 4px;
+        }
         hr {
-            margin: 15px 0 5px;
+            margin: 16px 0 8px;
             border: none;
-            border-top: 1px solid #caddf0;
+            border-top: 1px solid #d4e3f2;
+        }
+        .footnote {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #6b8bad;
+            margin-top: 14px;
+        }
+        .error-message {
+            background: #ffefef;
+            color: #bc3f2e;
+            padding: 16px;
+            border-radius: 32px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
-        /* адаптация под очень узкие экраны (ширина < 400px) */
-        @media (max-width: 450px) {
-            body {
-                padding: 12px 12px 30px;
-            }
+        @media (max-width: 480px) {
             .card-inner {
-                padding: 18px 18px 28px;
+                padding: 20px 18px 28px;
+            }
+            .macro-number {
+                font-size: 1.5rem;
+            }
+            .kcal-value {
+                font-size: 2.2rem;
             }
             .radio-group {
                 gap: 12px;
-                padding: 10px 12px;
+                padding: 8px 12px;
             }
-            .macro-value {
-                font-size: 1.4rem;
-            }
-            .kcal-number {
-                font-size: 1.9rem;
-            }
-            .calc-btn {
-                padding: 15px;
-                font-size: 1.15rem;
-            }
-        }
-
-        /* дополнительный штрих: крупные поля и удобный таргет */
-        input, select, .calc-btn {
-            font-size: 1rem;
-        }
-
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            margin-top: 20px;
-            color: #6e8dad;
         }
     </style>
 </head>
 <body>
-<div class="calculator-card">
+<div class="card">
     <div class="card-inner">
-        <h1>⚡ Калории & БЖУ</h1>
-        <div class="sub">Формула Миффлина — Сан Жеора · Коррекция под цель</div>
+        <div class="logo">
+            <h1>⚡ NutriCalc</h1>
+            <div class="badge">Mifflin-St Jeor</div>
+        </div>
+        <div class="subhead">Рассчитай калории и БЖУ с учётом пола, активности и цели</div>
 
-        <!-- Пол (radio) -->
-        <div class="input-group">
-            <label>👤 Пол</label>
+        <!-- Пол -->
+        <div class="field">
+            <label>🧬 Пол</label>
             <div class="radio-group">
                 <label class="radio-option">
                     <input type="radio" name="gender" value="male" checked> Мужской
@@ -303,113 +307,119 @@
         </div>
 
         <!-- Возраст -->
-        <div class="input-group">
+        <div class="field">
             <label>📅 Возраст <i>(лет)</i></label>
-            <input type="number" id="age" placeholder="например, 28" value="30" min="1" max="130" step="1">
+            <input type="number" id="age" placeholder="28" value="30" min="15" max="120" step="1">
         </div>
 
         <!-- Рост -->
-        <div class="input-group">
+        <div class="field">
             <label>📏 Рост <i>(см)</i></label>
-            <input type="number" id="height" placeholder="например, 175" value="175" min="50" max="260" step="0.5">
+            <input type="number" id="height" placeholder="175" value="175" min="100" max="250" step="0.5">
         </div>
 
         <!-- Вес -->
-        <div class="input-group">
+        <div class="field">
             <label>⚖️ Вес <i>(кг)</i></label>
-            <input type="number" id="weight" placeholder="например, 70.5" value="70" min="10" max="350" step="0.1">
+            <input type="number" id="weight" placeholder="70" value="70" min="30" max="250" step="0.5">
         </div>
 
-        <!-- Цель (select) -->
-        <div class="input-group">
-            <label>🎯 Цель</label>
-            <select id="goal">
-                <option value="loss">🔥 Похудение</option>
-                <option value="maintain" selected>✨ Поддержание формы</option>
-                <option value="gain">💪 Набор массы</option>
+        <!-- Уровень активности (НОВЫЙ БЛОК) -->
+        <div class="field">
+            <label>🏃‍♂️ Уровень активности</label>
+            <select id="activity" class="activity-select">
+                <option value="1.2">🛋️ Минимальный (сидячий образ жизни)</option>
+                <option value="1.375">🚶‍♂️ Низкий (легкие прогулки 1-3 дня/нед)</option>
+                <option value="1.55" selected>🏋️ Средний (тренировки 3-5 дней/нед)</option>
+                <option value="1.725">🔥 Высокий (ежедневные нагрузки)</option>
+                <option value="1.9">⚡ Экстремальный (спорт + физ. работа)</option>
             </select>
         </div>
 
-        <!-- Кнопка рассчитать -->
-        <button class="calc-btn" id="calculateBtn">Рассчитать норму</button>
+        <!-- Цель -->
+        <div class="field">
+            <label>🎯 Цель</label>
+            <select id="goal">
+                <option value="loss">🔥 Похудение (дефицит 15%)</option>
+                <option value="maintain" selected>✨ Поддержание формы</option>
+                <option value="gain">💪 Набор массы (профицит 15%)</option>
+            </select>
+        </div>
 
-        <!-- Блок с результатом -->
+        <button class="calc-btn" id="calculateBtn">Рассчитать норму →</button>
+
+        <!-- Результат -->
         <div id="resultContainer">
-            <!-- Динамически обновляемый результат -->
-            <div class="result-box" id="resultDisplay">
-                <div class="result-title">📊 Ваш персональный расчёт</div>
-                <div style="text-align: center; color: #4b6f8e; padding: 16px 6px;">
+            <div class="result-card" id="resultBlock">
+                <div class="result-header">
+                    <span>📊 Ваш персональный расчёт</span>
+                </div>
+                <div style="text-align: center; color: #54738f; padding: 12px 6px;">
                     Заполните параметры и нажмите «Рассчитать»
                 </div>
             </div>
         </div>
-        <footer>Миффлин-Сан Жеор ± активность не требуется — коррекция по цели</footer>
+        <div class="footnote">
+            Формула Миффлина-Сан Жеора × активность × цель (дефицит/профицит). Все значения целые.
+        </div>
     </div>
 </div>
 
 <script>
     (function() {
-        // DOM элементы
-        const genderMale = document.querySelector('input[value="male"]');
-        const genderFemale = document.querySelector('input[value="female"]');
+        // DOM elements
+        const maleRadio = document.querySelector('input[value="male"]');
+        const femaleRadio = document.querySelector('input[value="female"]');
         const ageInput = document.getElementById('age');
         const heightInput = document.getElementById('height');
         const weightInput = document.getElementById('weight');
+        const activitySelect = document.getElementById('activity');
         const goalSelect = document.getElementById('goal');
         const calcBtn = document.getElementById('calculateBtn');
-        const resultDisplay = document.getElementById('resultDisplay');
+        const resultBlock = document.getElementById('resultBlock');
 
-        // Вспомогательная функция: валидация и парсинг чисел
-        function getValidNumber(inputElement, fieldName, minVal, maxVal, isInteger = false) {
-            let rawValue = inputElement.value.trim();
-            if (rawValue === "") {
-                throw new Error(`${fieldName} не может быть пустым.`);
-            }
-            let number = isInteger ? parseInt(rawValue, 10) : parseFloat(rawValue);
-            if (isNaN(number)) {
-                throw new Error(`${fieldName} должно быть числом.`);
-            }
-            if (isInteger && !Number.isInteger(number)) {
-                throw new Error(`${fieldName} должно быть целым числом.`);
-            }
-            if (number < minVal || number > maxVal) {
-                throw new Error(`${fieldName} должно быть от ${minVal} до ${maxVal}.`);
-            }
-            return number;
+        // Helper: получение валидного числа
+        function getValidNumber(input, fieldName, minVal, maxVal, isInteger = false) {
+            let raw = input.value.trim();
+            if (raw === "") throw new Error(`${fieldName} не может быть пустым.`);
+            let num = isInteger ? parseInt(raw, 10) : parseFloat(raw);
+            if (isNaN(num)) throw new Error(`${fieldName} должно быть числом.`);
+            if (isInteger && !Number.isInteger(num)) throw new Error(`${fieldName} должно быть целым числом.`);
+            if (num < minVal || num > maxVal) throw new Error(`${fieldName} должно быть от ${minVal} до ${maxVal}.`);
+            return num;
         }
 
-        // Получить выбранный пол
-        function getSelectedGender() {
-            if (genderMale.checked) return 'male';
-            if (genderFemale.checked) return 'female';
-            return 'male'; // fallback
+        // Получение пола
+        function getGender() {
+            return maleRadio.checked ? 'male' : 'female';
         }
 
-        // Получить коэффициент и проценты БЖУ в зависимости от цели
-        function getGoalParams(goal) {
+        // Параметры цели (коэффициент коррекции и проценты БЖУ)
+        function getGoalMacros(goal) {
             switch(goal) {
                 case 'loss':
-                    return { factor: 0.85, proteinPct: 35, fatPct: 25, carbPct: 40 };
+                    return { factor: 0.85, protein: 35, fat: 25, carbs: 40 };
                 case 'maintain':
-                    return { factor: 1.0, proteinPct: 30, fatPct: 25, carbPct: 45 };
+                    return { factor: 1.0, protein: 30, fat: 25, carbs: 45 };
                 case 'gain':
-                    return { factor: 1.15, proteinPct: 25, fatPct: 25, carbPct: 50 };
+                    return { factor: 1.15, protein: 25, fat: 25, carbs: 50 };
                 default:
-                    return { factor: 1.0, proteinPct: 30, fatPct: 25, carbPct: 45 };
+                    return { factor: 1.0, protein: 30, fat: 25, carbs: 45 };
             }
         }
 
-        // Основная функция расчета
-        function calculateCaloriesAndMacros() {
+        // Основной расчёт
+        function calculate() {
             try {
-                // 1. Получаем и валидируем входные данные
-                const age = getValidNumber(ageInput, 'Возраст', 1, 130, true);
-                const height = getValidNumber(heightInput, 'Рост', 50, 260, false);
-                const weight = getValidNumber(weightInput, 'Вес', 10, 350, false);
-                const gender = getSelectedGender();
+                // 1. Валидация
+                const age = getValidNumber(ageInput, 'Возраст', 15, 120, true);
+                const height = getValidNumber(heightInput, 'Рост', 100, 250, false);
+                const weight = getValidNumber(weightInput, 'Вес', 30, 250, false);
+                const gender = getGender();
+                const activityFactor = parseFloat(activitySelect.value);
                 const goal = goalSelect.value;
 
-                // 2. Формула Миффлина-Сан Жеора (BMR)
+                // 2. BMR по Миффлину-Сан Жеору
                 let bmr;
                 if (gender === 'male') {
                     bmr = 10 * weight + 6.25 * height - 5 * age + 5;
@@ -417,126 +427,104 @@
                     bmr = 10 * weight + 6.25 * height - 5 * age - 161;
                 }
 
-                // Проверка на некорректный BMR (теоретически >0)
                 if (bmr <= 0 || !isFinite(bmr)) {
                     throw new Error("Некорректный базовый метаболизм, проверьте параметры.");
                 }
 
-                // 3. Коррекция калорий под цель (коэффициент)
-                const { factor, proteinPct, fatPct, carbPct } = getGoalParams(goal);
-                let dailyCalories = bmr * factor;
+                // 3. Умножаем на активность (получаем TDEE)
+                let tdee = bmr * activityFactor;
 
-                // Округлим калории до целого числа для красоты
+                // 4. Коррекция под цель (похудение / поддержание / набор)
+                const { factor, protein: proteinPct, fat: fatPct, carbs: carbPct } = getGoalMacros(goal);
+                let dailyCalories = tdee * factor;
+
+                // Округляем калории до целых
                 dailyCalories = Math.round(dailyCalories);
-                if (dailyCalories < 800) {
-                    // слишком низкая калорийность, но допустим (экстремальные параметры)
-                    // просто предупредим через консоль, но показываем корректно
-                    console.info("Калорийность низкая, но расчёт верен.");
+                if (dailyCalories < 1000 && dailyCalories > 0) {
+                    // допускаем, но можно предупредить (низкая калорийность, но оставляем)
                 }
+                if (dailyCalories <= 0) dailyCalories = 1200; // fallback safety
 
-                // 4. Расчёт БЖУ в граммах (белки, жиры, углеводы)
-                // энергетическая ценность: белки 4ккал/г, жиры 9ккал/г, углеводы 4ккал/г
+                // 5. Расчёт БЖУ в граммах (целые числа)
                 let proteinGrams = (dailyCalories * (proteinPct / 100)) / 4;
                 let fatGrams = (dailyCalories * (fatPct / 100)) / 9;
                 let carbsGrams = (dailyCalories * (carbPct / 100)) / 4;
 
-                // округление до 1 знака после запятой для удобства
-                proteinGrams = proteinGrams.toFixed(1);
-                fatGrams = fatGrams.toFixed(1);
-                carbsGrams = carbsGrams.toFixed(1);
+                // Округляем до целых граммов (требование "целые числа")
+                proteinGrams = Math.round(proteinGrams);
+                fatGrams = Math.round(fatGrams);
+                carbsGrams = Math.round(carbsGrams);
 
-                // 5. Формирование результата (вывод)
+                // Дополнительная проверка на крайне малые значения (но всё равно целые)
+                if (proteinGrams < 0) proteinGrams = 0;
+                if (fatGrams < 0) fatGrams = 0;
+                if (carbsGrams < 0) carbsGrams = 0;
+
+                // Расшифровка цели и активности для красивого отображения
                 let goalText = "";
-                if (goal === 'loss') goalText = "🔥 Похудение";
+                if (goal === 'loss') goalText = "🔥 Похудение (дефицит)";
                 else if (goal === 'maintain') goalText = "✨ Поддержание";
-                else goalText = "💪 Набор массы";
+                else goalText = "💪 Набор массы (профицит)";
 
-                // Создаём блок с результатами
-                resultDisplay.innerHTML = `
-                    <div class="result-title">📊 ${goalText} · Результат</div>
-                    <div class="kcal-display">
-                        <div style="font-size: 0.85rem; font-weight: 500; color: #2c6288;">Суточная норма</div>
-                        <div class="kcal-number">${dailyCalories} <span style="font-size: 1.1rem;">ккал</span></div>
+                let activityText = activitySelect.options[activitySelect.selectedIndex]?.text.split(' ')[0] || "Активность";
+
+                // Формирование HTML результата
+                resultBlock.innerHTML = `
+                    <div class="result-header">
+                        <span>🎯 ${goalText}</span>
+                        <span style="font-size:0.7rem; background:#e7f0f9; padding:4px 8px; border-radius:40px;">${activityText}</span>
                     </div>
-                    <div class="macro-grid">
-                        <div class="macro-card">
-                            <div class="macro-value">${proteinGrams} <span style="font-size: 0.9rem;">г</span></div>
-                            <div class="macro-label">🥩 Белки</div>
-                            <div style="font-size:0.7rem; color:#6883a0;">${proteinPct}% от калорий</div>
+                    <div class="kcal-circle">
+                        <div class="kcal-label">Суточная норма калорий</div>
+                        <div class="kcal-value">${dailyCalories} <span style="font-size:1.2rem;">ккал</span></div>
+                    </div>
+                    <div class="macros-grid">
+                        <div class="macro-item">
+                            <div class="macro-number">${proteinGrams} <span class="macro-unit">г</span></div>
+                            <div class="macro-name">🥩 Белки</div>
+                            <div class="macro-percent">${proteinPct}% от калорий</div>
                         </div>
-                        <div class="macro-card">
-                            <div class="macro-value">${fatGrams} <span style="font-size: 0.9rem;">г</span></div>
-                            <div class="macro-label">🧈 Жиры</div>
-                            <div style="font-size:0.7rem; color:#6883a0;">${fatPct}% от калорий</div>
+                        <div class="macro-item">
+                            <div class="macro-number">${fatGrams} <span class="macro-unit">г</span></div>
+                            <div class="macro-name">🧈 Жиры</div>
+                            <div class="macro-percent">${fatPct}% от калорий</div>
                         </div>
-                        <div class="macro-card">
-                            <div class="macro-value">${carbsGrams} <span style="font-size: 0.9rem;">г</span></div>
-                            <div class="macro-label">🍚 Углеводы</div>
-                            <div style="font-size:0.7rem; color:#6883a0;">${carbPct}% от калорий</div>
+                        <div class="macro-item">
+                            <div class="macro-number">${carbsGrams} <span class="macro-unit">г</span></div>
+                            <div class="macro-name">🍚 Углеводы</div>
+                            <div class="macro-percent">${carbPct}% от калорий</div>
                         </div>
                     </div>
                     <hr>
-                    <div style="font-size: 0.72rem; text-align: center; color: #5f7c9a; margin-top: 8px;">
-                        ⚡ Формула Миффлина-Сан Жеора × коэффициент цели
+                    <div class="footnote" style="margin-top: 10px;">
+                        ✅ BMR × активность (${activityFactor}) × цель (${factor})<br>
+                        Белки/углеводы = 4 ккал/г · Жиры = 9 ккал/г
                     </div>
                 `;
-            } catch (error) {
-                // Отображение ошибки в блоке результата
-                resultDisplay.innerHTML = `
-                    <div class="result-title">⚠️ Ошибка ввода</div>
-                    <div class="error-msg">
-                        ${error.message}<br>
-                        <span style="font-size:0.8rem;">Проверьте возраст (1-130), рост (50-260 см), вес (10-350 кг)</span>
+            } catch (err) {
+                resultBlock.innerHTML = `
+                    <div class="result-header">
+                        <span>⚠️ Ошибка</span>
+                    </div>
+                    <div class="error-message">
+                        ${err.message}<br>
+                        <span style="font-size:0.75rem;">Проверьте возраст (15-120), рост (100-250 см), вес (30-250 кг)</span>
                     </div>
                 `;
             }
         }
 
-        // Дополнительная предварительная санитизация при клике
-        function handleCalculate() {
-            // небольшая косметическая проверка полей на пустоту (дополнительно)
-            if (ageInput.value.trim() === "" || heightInput.value.trim() === "" || weightInput.value.trim() === "") {
-                resultDisplay.innerHTML = `
-                    <div class="result-title">📛 Не все данные</div>
-                    <div class="error-msg">
-                        Пожалуйста, заполните возраст, рост и вес перед расчётом.
-                    </div>
-                `;
-                return;
-            }
-            calculateCaloriesAndMacros();
-        }
+        // обработчик клика
+        calcBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            calculate();
+        });
 
-        // Привязываем событие к кнопке
-        calcBtn.addEventListener('click', handleCalculate);
-
-        // (Опционально) Автоматический расчет при загрузке страницы с демо-значениями (пример)
-        // Для удобства: выполним первичный расчёт с дефолтными числами (30 лет, 175 см, 70 кг, мужчина, поддержание)
-        // чтобы пользователь сразу видел пример результата, согласно ТЗ это не запрещено.
-        // Но чтобы не нарушать ожидания, сделаем предзаполнение с существующими значениями по умолчанию.
+        // При загрузке страницы производим расчёт с данными по умолчанию (активность средняя, поддержание)
         window.addEventListener('DOMContentLoaded', () => {
-            // если поля имеют значения по умолчанию (они установлены в HTML: возраст 30, рост 175, вес 70)
-            // произведем корректный расчет при загрузке для демонстрации функционала
-            // пользователь сразу видит работающий сервис.
-            try {
-                // небольшая проверка: если значения валидны, рассчитываем.
-                const testAge = parseFloat(ageInput.value);
-                const testHeight = parseFloat(heightInput.value);
-                const testWeight = parseFloat(weightInput.value);
-                if (!isNaN(testAge) && !isNaN(testHeight) && !isNaN(testWeight) && testAge>0 && testHeight>0 && testWeight>0) {
-                    calculateCaloriesAndMacros();
-                } else {
-                    // если нет, покажем нейтральное состояние
-                    resultDisplay.innerHTML = `
-                        <div class="result-title">📊 Ваш персональный расчёт</div>
-                        <div style="text-align: center; color: #4b6f8e; padding: 16px 6px;">
-                            Введите данные и нажмите «Рассчитать»
-                        </div>
-                    `;
-                }
-            } catch(e) {
-                // тихо
-            }
+            // Убедимся, что поля заполнены значениями по умолчанию (они уже есть в HTML)
+            // вызовем calculate для демонстрации работы сервиса
+            calculate();
         });
     })();
 </script>
