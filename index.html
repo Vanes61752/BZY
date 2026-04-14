@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Calorie & Macros Pro | Миффлин-Сан Жеор + Активность</title>
+    <title>NutriCalc PRO | Калории + БЖУ 25/20/55</title>
     <style>
         * {
             margin: 0;
@@ -22,15 +22,12 @@
             align-items: center;
         }
 
-        /* главный контейнер — адаптив, ~400-460px */
         .card {
-            max-width: 500px;
+            max-width: 520px;
             width: 100%;
             background: rgba(255, 255, 255, 0.97);
             border-radius: 48px;
             box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.02);
-            backdrop-filter: blur(0px);
-            transition: all 0.2s;
             overflow: hidden;
         }
 
@@ -38,7 +35,6 @@
             padding: 28px 24px 36px;
         }
 
-        /* заголовок */
         .logo {
             display: flex;
             align-items: baseline;
@@ -72,7 +68,6 @@
             font-weight: 450;
         }
 
-        /* поля ввода */
         .field {
             margin-bottom: 20px;
             display: flex;
@@ -86,12 +81,25 @@
             letter-spacing: -0.2px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
         }
-        label i {
-            font-weight: 400;
-            font-size: 0.8rem;
-            color: #5f8db0;
+        .info-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: #cfdfef;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #1f5e83;
+            cursor: help;
+            transition: 0.1s;
+        }
+        .info-icon:hover {
+            background: #b7cee6;
+            transform: scale(1.05);
         }
         input, select {
             width: 100%;
@@ -111,7 +119,6 @@
             box-shadow: 0 0 0 3px rgba(46, 126, 176, 0.15);
         }
 
-        /* радио группа для пола */
         .radio-group {
             display: flex;
             gap: 20px;
@@ -135,7 +142,6 @@
             margin: 0;
         }
 
-        /* улучшенный стиль для селекта активности */
         .activity-select {
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233a7ca5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
             background-repeat: no-repeat;
@@ -143,7 +149,37 @@
             appearance: none;
         }
 
-        /* кнопка */
+        .activity-hint {
+            background: #f3f8fe;
+            border-radius: 20px;
+            padding: 12px 16px;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            color: #2c6280;
+            border-left: 3px solid #6ea8cf;
+            line-height: 1.4;
+        }
+        .hint-title {
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hint-list {
+            list-style: none;
+            padding-left: 4px;
+        }
+        .hint-list li {
+            margin-bottom: 4px;
+            display: flex;
+            gap: 8px;
+        }
+        .hint-list li span:first-child {
+            font-weight: 600;
+            min-width: 60px;
+        }
+
         .calc-btn {
             width: 100%;
             background: linear-gradient(105deg, #1f5e83, #2c7fb6);
@@ -164,7 +200,6 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
-        /* блок результата — улучшенный дизайн */
         .result-card {
             background: linear-gradient(125deg, #f0f7ff, #ffffff);
             border-radius: 36px;
@@ -221,7 +256,6 @@
             text-align: center;
             box-shadow: 0 5px 12px rgba(0, 0, 0, 0.03);
             border: 1px solid #e3effa;
-            transition: transform 0.1s;
         }
         .macro-number {
             font-size: 1.8rem;
@@ -281,6 +315,9 @@
                 gap: 12px;
                 padding: 8px 12px;
             }
+            .hint-list li span:first-child {
+                min-width: 50px;
+            }
         }
     </style>
 </head>
@@ -289,9 +326,9 @@
     <div class="card-inner">
         <div class="logo">
             <h1>⚡ NutriCalc</h1>
-            <div class="badge">Mifflin-St Jeor</div>
+            <div class="badge">25% белка · 20% жира · 55% углеводов</div>
         </div>
-        <div class="subhead">Рассчитай калории и БЖУ с учётом пола, активности и цели</div>
+        <div class="subhead">Рассчитай калории и БЖУ (25/20/55) с учётом пола, активности и цели</div>
 
         <!-- Пол -->
         <div class="field">
@@ -324,9 +361,12 @@
             <input type="number" id="weight" placeholder="70" value="70" min="30" max="250" step="0.5">
         </div>
 
-        <!-- Уровень активности (НОВЫЙ БЛОК) -->
+        <!-- Уровень активности с рекомендациями -->
         <div class="field">
-            <label>🏃‍♂️ Уровень активности</label>
+            <label>
+                🏃‍♂️ Уровень активности
+                <span class="info-icon" title="Коэффициент активности умножается на BMR (базовый метаболизм) для получения расхода калорий в сутки. Выберите наиболее подходящий вариант.">?</span>
+            </label>
             <select id="activity" class="activity-select">
                 <option value="1.2">🛋️ Минимальный (сидячий образ жизни)</option>
                 <option value="1.375">🚶‍♂️ Низкий (легкие прогулки 1-3 дня/нед)</option>
@@ -334,6 +374,17 @@
                 <option value="1.725">🔥 Высокий (ежедневные нагрузки)</option>
                 <option value="1.9">⚡ Экстремальный (спорт + физ. работа)</option>
             </select>
+            <div class="activity-hint">
+                <div class="hint-title">📘 Рекомендации по выбору активности:</div>
+                <ul class="hint-list">
+                    <li><span>🛋️ 1.2</span> — Офисная работа, минимум движения, нет спорта</li>
+                    <li><span>🚶 1.375</span> — Лёгкие прогулки или тренировки 1-3 раза в неделю</li>
+                    <li><span>🏋️ 1.55</span> — Умеренные тренировки 3-5 раз в неделю (актуально для большинства)</li>
+                    <li><span>🔥 1.725</span> — Ежедневные интенсивные тренировки / активная работа</li>
+                    <li><span>⚡ 1.9</span> — Профессиональный спорт или тяжёлый физический труд</li>
+                </ul>
+                <div style="font-size:0.7rem; margin-top: 6px;">* Коэффициент используется для расчёта дневной нормы калорий.</div>
+            </div>
         </div>
 
         <!-- Цель -->
@@ -360,14 +411,13 @@
             </div>
         </div>
         <div class="footnote">
-            Формула Миффлина-Сан Жеора × активность × цель (дефицит/профицит). Все значения целые.
+            Формула Миффлина-Сан Жеора × активность × цель. Распределение БЖУ: 25% белков, 20% жиров, 55% углеводов.
         </div>
     </div>
 </div>
 
 <script>
     (function() {
-        // DOM elements
         const maleRadio = document.querySelector('input[value="male"]');
         const femaleRadio = document.querySelector('input[value="female"]');
         const ageInput = document.getElementById('age');
@@ -378,7 +428,13 @@
         const calcBtn = document.getElementById('calculateBtn');
         const resultBlock = document.getElementById('resultBlock');
 
-        // Helper: получение валидного числа
+        // НОВЫЕ ПРОЦЕНТЫ БЖУ для всех целей (25/20/55)
+        const MACRO_RATIOS = {
+            proteinPct: 25,
+            fatPct: 20,
+            carbPct: 55
+        };
+
         function getValidNumber(input, fieldName, minVal, maxVal, isInteger = false) {
             let raw = input.value.trim();
             if (raw === "") throw new Error(`${fieldName} не может быть пустым.`);
@@ -389,90 +445,72 @@
             return num;
         }
 
-        // Получение пола
         function getGender() {
             return maleRadio.checked ? 'male' : 'female';
         }
 
-        // Параметры цели (коэффициент коррекции и проценты БЖУ)
-        function getGoalMacros(goal) {
+        // Коррекция калорий под цель (коэффициенты), но проценты БЖУ единые
+        function getGoalFactor(goal) {
             switch(goal) {
-                case 'loss':
-                    return { factor: 0.85, protein: 35, fat: 25, carbs: 40 };
-                case 'maintain':
-                    return { factor: 1.0, protein: 30, fat: 25, carbs: 45 };
-                case 'gain':
-                    return { factor: 1.15, protein: 25, fat: 25, carbs: 50 };
-                default:
-                    return { factor: 1.0, protein: 30, fat: 25, carbs: 45 };
+                case 'loss': return 0.85;
+                case 'maintain': return 1.0;
+                case 'gain': return 1.15;
+                default: return 1.0;
             }
         }
 
-        // Основной расчёт
         function calculate() {
             try {
-                // 1. Валидация
                 const age = getValidNumber(ageInput, 'Возраст', 15, 120, true);
                 const height = getValidNumber(heightInput, 'Рост', 100, 250, false);
                 const weight = getValidNumber(weightInput, 'Вес', 30, 250, false);
                 const gender = getGender();
                 const activityFactor = parseFloat(activitySelect.value);
                 const goal = goalSelect.value;
+                const goalFactor = getGoalFactor(goal);
 
-                // 2. BMR по Миффлину-Сан Жеору
+                // 1. BMR по Миффлину-Сан Жеору
                 let bmr;
                 if (gender === 'male') {
                     bmr = 10 * weight + 6.25 * height - 5 * age + 5;
                 } else {
                     bmr = 10 * weight + 6.25 * height - 5 * age - 161;
                 }
+                if (bmr <= 0 || !isFinite(bmr)) throw new Error("Некорректный базовый метаболизм.");
 
-                if (bmr <= 0 || !isFinite(bmr)) {
-                    throw new Error("Некорректный базовый метаболизм, проверьте параметры.");
-                }
-
-                // 3. Умножаем на активность (получаем TDEE)
+                // 2. TDEE с активностью
                 let tdee = bmr * activityFactor;
-
-                // 4. Коррекция под цель (похудение / поддержание / набор)
-                const { factor, protein: proteinPct, fat: fatPct, carbs: carbPct } = getGoalMacros(goal);
-                let dailyCalories = tdee * factor;
-
-                // Округляем калории до целых
+                // 3. Коррекция по цели
+                let dailyCalories = tdee * goalFactor;
                 dailyCalories = Math.round(dailyCalories);
-                if (dailyCalories < 1000 && dailyCalories > 0) {
-                    // допускаем, но можно предупредить (низкая калорийность, но оставляем)
-                }
-                if (dailyCalories <= 0) dailyCalories = 1200; // fallback safety
+                if (dailyCalories <= 0) dailyCalories = 1200; // страховка
 
-                // 5. Расчёт БЖУ в граммах (целые числа)
+                // 4. Расчёт БЖУ в граммах (единые проценты 25/20/55)
+                const { proteinPct, fatPct, carbPct } = MACRO_RATIOS;
                 let proteinGrams = (dailyCalories * (proteinPct / 100)) / 4;
                 let fatGrams = (dailyCalories * (fatPct / 100)) / 9;
                 let carbsGrams = (dailyCalories * (carbPct / 100)) / 4;
 
-                // Округляем до целых граммов (требование "целые числа")
+                // Округление до целых граммов
                 proteinGrams = Math.round(proteinGrams);
                 fatGrams = Math.round(fatGrams);
                 carbsGrams = Math.round(carbsGrams);
-
-                // Дополнительная проверка на крайне малые значения (но всё равно целые)
                 if (proteinGrams < 0) proteinGrams = 0;
                 if (fatGrams < 0) fatGrams = 0;
                 if (carbsGrams < 0) carbsGrams = 0;
 
-                // Расшифровка цели и активности для красивого отображения
+                // Текст цели для отображения
                 let goalText = "";
-                if (goal === 'loss') goalText = "🔥 Похудение (дефицит)";
-                else if (goal === 'maintain') goalText = "✨ Поддержание";
-                else goalText = "💪 Набор массы (профицит)";
+                if (goal === 'loss') goalText = "🔥 Похудение (дефицит 15%)";
+                else if (goal === 'maintain') goalText = "✨ Поддержание формы";
+                else goalText = "💪 Набор массы (профицит 15%)";
 
-                let activityText = activitySelect.options[activitySelect.selectedIndex]?.text.split(' ')[0] || "Активность";
+                let activityShort = activitySelect.options[activitySelect.selectedIndex]?.text.split(' ')[0] || "Активность";
 
-                // Формирование HTML результата
                 resultBlock.innerHTML = `
                     <div class="result-header">
                         <span>🎯 ${goalText}</span>
-                        <span style="font-size:0.7rem; background:#e7f0f9; padding:4px 8px; border-radius:40px;">${activityText}</span>
+                        <span style="font-size:0.7rem; background:#e7f0f9; padding:4px 8px; border-radius:40px;">${activityShort}</span>
                     </div>
                     <div class="kcal-circle">
                         <div class="kcal-label">Суточная норма калорий</div>
@@ -497,8 +535,8 @@
                     </div>
                     <hr>
                     <div class="footnote" style="margin-top: 10px;">
-                        ✅ BMR × активность (${activityFactor}) × цель (${factor})<br>
-                        Белки/углеводы = 4 ккал/г · Жиры = 9 ккал/г
+                        ✅ BMR × активность (${activityFactor}) × цель (${goalFactor})<br>
+                        Распределение БЖУ: белки 25% | жиры 20% | углеводы 55%
                     </div>
                 `;
             } catch (err) {
@@ -514,16 +552,12 @@
             }
         }
 
-        // обработчик клика
         calcBtn.addEventListener('click', (e) => {
             e.preventDefault();
             calculate();
         });
 
-        // При загрузке страницы производим расчёт с данными по умолчанию (активность средняя, поддержание)
         window.addEventListener('DOMContentLoaded', () => {
-            // Убедимся, что поля заполнены значениями по умолчанию (они уже есть в HTML)
-            // вызовем calculate для демонстрации работы сервиса
             calculate();
         });
     })();
