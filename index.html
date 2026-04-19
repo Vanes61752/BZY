@@ -2,527 +2,362 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NutriCalc PRO | Cyberpunk Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NutriCalc Sport Pro</title>
     <style>
         :root {
-            --bg-main: #050b14;
-            --bg-card: rgba(13, 20, 36, 0.7);
-            --neon-blue: #00f0ff;
-            --neon-blue-dim: rgba(0, 240, 255, 0.2);
-            --neon-blue-glow: rgba(0, 240, 255, 0.5);
-            --text-main: #e0fbfc;
-            --text-muted: #8b9bb4;
-            --border-color: rgba(0, 240, 255, 0.3);
-            --accent-gradient: linear-gradient(135deg, #0088ff, #00f0ff);
+            /* Дефолтная мужская тема */
+            --accent: #007AFF;
+            --accent-gradient: linear-gradient(135deg, #007AFF, #00C6FF);
+            --accent-shadow: rgba(0, 122, 255, 0.4);
+            --bg-dark: #0F1218;
+            --card-bg: #1C212D;
+            --input-bg: #252B38;
+            --text-main: #FFFFFF;
+            --text-dim: #8E97A4;
+        }
+
+        /* Класс для женской темы (переключается через JS) */
+        .theme-female {
+            --accent: #FF2D55;
+            --accent-gradient: linear-gradient(135deg, #FF2D55, #FF5E7B);
+            --accent-shadow: rgba(255, 45, 85, 0.4);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Inter', -apple-system, sans-serif;
+            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
         }
 
         body {
-            background: radial-gradient(circle at top right, #0a1428 0%, var(--bg-main) 100%);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            padding: 24px 16px 48px;
-            min-height: 100vh;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
-            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .card {
-            max-width: 520px;
+        .container {
+            max-width: 450px;
             width: 100%;
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 24px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--neon-blue-dim) inset;
-            overflow: hidden;
-            position: relative;
+            background: var(--card-bg);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
-            background: var(--accent-gradient);
-            box-shadow: 0 0 15px var(--neon-blue);
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
         }
 
-        .card-inner {
-            padding: 32px 28px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: baseline;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 8px;
-        }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-blue-glow);
-            letter-spacing: -0.5px;
+        .header h1 {
+            font-size: 22px;
             text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
         }
 
-        .badge {
-            background: rgba(0, 240, 255, 0.1);
-            padding: 6px 12px;
-            border-radius: 60px;
-            border: 1px solid var(--neon-blue);
-            font-size: 0.7rem;
+        .header p {
+            color: var(--text-dim);
+            font-size: 13px;
+        }
+
+        /* Селектор пола */
+        .gender-switch {
+            display: flex;
+            background: var(--input-bg);
+            padding: 5px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .gender-btn {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 12px;
             font-weight: 700;
-            color: var(--neon-blue);
-            box-shadow: 0 0 10px var(--neon-blue-dim);
+            font-size: 14px;
+            color: var(--text-dim);
         }
 
-        .subhead {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-left: 2px solid var(--neon-blue);
-            padding-left: 12px;
-            margin: 12px 0 28px 0;
-            line-height: 1.4;
+        .gender-btn.active {
+            background: var(--accent-gradient);
+            color: white;
+            box-shadow: 0 4px 15px var(--accent-shadow);
         }
 
-        .field {
-            margin-bottom: 22px;
+        /* Поля ввода */
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        label {
+        .input-group label {
+            font-size: 12px;
+            color: var(--text-dim);
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #a3b8cc;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-transform: uppercase;
-        }
-
-        label i {
-            color: var(--text-muted);
-            text-transform: none;
-            font-style: normal;
-            font-weight: 400;
+            padding-left: 5px;
         }
 
         input, select {
-            width: 100%;
-            padding: 16px 18px;
-            font-size: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            color: #fff;
-            transition: all 0.3s;
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
             outline: none;
-            font-family: inherit;
+            width: 100%;
         }
 
         input:focus, select:focus {
-            border-color: var(--neon-blue);
-            box-shadow: 0 0 15px var(--neon-blue-dim);
-            background: rgba(0, 240, 255, 0.05);
+            border-color: var(--accent);
         }
 
-        select option {
-            background: var(--bg-main);
-            color: #fff;
+        .full-width {
+            grid-column: span 3;
+            margin-top: 10px;
         }
 
-        .radio-group {
-            display: flex;
-            gap: 12px;
-        }
-
-        .radio-option {
-            flex: 1;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .radio-option input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .radio-box {
-            display: block;
-            text-align: center;
-            padding: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            transition: all 0.3s;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        .radio-option input:checked ~ .radio-box {
-            border-color: var(--neon-blue);
-            color: #fff;
-            background: rgba(0, 240, 255, 0.1);
-            box-shadow: 0 0 15px var(--neon-blue-dim);
-            text-shadow: 0 0 5px var(--neon-blue-glow);
-        }
-
+        /* Кнопка */
         .calc-btn {
-            width: 100%;
             background: var(--accent-gradient);
+            color: white;
             border: none;
-            padding: 18px 16px;
-            font-size: 1.1rem;
+            width: 100%;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 16px;
             font-weight: 800;
-            color: #000;
-            border-radius: 12px;
-            margin: 20px 0 28px 0;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px var(--neon-blue-glow);
+            margin-top: 10px;
+            box-shadow: 0 10px 20px var(--accent-shadow);
             text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .calc-btn:hover {
-            box-shadow: 0 0 30px var(--neon-blue);
-            transform: translateY(-2px);
         }
 
         .calc-btn:active {
             transform: scale(0.98);
         }
 
-        .result-card {
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 16px;
-            padding: 24px 20px;
-            border: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
+        /* Результаты */
+        .results {
+            margin-top: 30px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            padding: 20px;
+            display: none; /* Появится после расчета */
         }
 
-        .result-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .result-header {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #fff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 12px;
+        .res-main {
+            text-align: center;
             margin-bottom: 20px;
         }
 
-        .kcal-circle {
-            text-align: center;
-            margin-bottom: 24px;
-            position: relative;
-        }
-
-        .kcal-value {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            color: transparent;
-            line-height: 1.1;
-            text-shadow: 0 0 20px var(--neon-blue-dim);
-        }
-
-        .kcal-label {
-            font-size: 0.85rem;
-            font-weight: 600;
+        .res-main span {
+            display: block;
+            font-size: 12px;
+            color: var(--text-dim);
             text-transform: uppercase;
-            color: var(--neon-blue);
-            letter-spacing: 2px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
-        .macros-grid {
+        .res-main strong {
+            font-size: 42px;
+            color: var(--accent);
+            line-height: 1;
+        }
+
+        .macros {
             display: flex;
-            gap: 12px;
             justify-content: space-between;
+            gap: 10px;
         }
 
-        .macro-item {
+        .macro-card {
             flex: 1;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 16px 8px;
+            background: var(--input-bg);
+            padding: 15px 10px;
+            border-radius: 15px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: 0.3s;
+            border-bottom: 3px solid var(--accent);
         }
 
-        .macro-item:hover {
-            border-color: var(--neon-blue-dim);
-            background: rgba(0, 240, 255, 0.05);
-        }
-
-        .macro-number {
-            font-size: 1.8rem;
+        .macro-card div:first-child {
+            font-size: 18px;
             font-weight: 800;
-            color: #fff;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+            margin-bottom: 5px;
         }
 
-        .macro-unit {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .macro-name {
-            font-size: 0.75rem;
+        .macro-card div:last-child {
+            font-size: 10px;
+            color: var(--text-dim);
             text-transform: uppercase;
             font-weight: 700;
-            letter-spacing: 1px;
-            margin-top: 8px;
-            color: var(--neon-blue);
         }
 
-        .footnote {
-            font-size: 0.75rem;
-            text-align: center;
-            color: var(--text-muted);
-            margin-top: 16px;
-            line-height: 1.5;
-        }
-
-        .error-message {
-            background: rgba(255, 50, 50, 0.1);
-            color: #ff4444;
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px solid rgba(255, 50, 50, 0.3);
-            font-weight: 500;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        @media (max-width: 480px) {
-            .card-inner { padding: 24px 20px; }
-            .kcal-value { font-size: 2.8rem; }
-            .macro-number { font-size: 1.5rem; }
-            .radio-group { flex-direction: column; gap: 8px; }
+        @media (max-width: 400px) {
+            .grid-inputs { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
-<div class="card">
-    <div class="card-inner">
-        <div class="logo">
-            <h1>NutriCalc</h1>
-            <div class="badge">SYS: 25/20/55</div>
-        </div>
-        <div class="subhead">Прогнозирование метаболизма и расчет БЖУ по формуле Миффлина-Сан Жеора</div>
 
-        <div class="field">
-            <label>Пол</label>
-            <div class="radio-group">
-                <label class="radio-option">
-                    <input type="radio" name="gender" value="male" checked>
-                    <span class="radio-box">Мужской</span>
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="gender" value="female">
-                    <span class="radio-box">Женский</span>
-                </label>
-            </div>
-        </div>
+<div class="container" id="mainContainer">
+    <div class="header">
+        <h1>NutriCalc <span style="font-weight: 300;">PRO</span></h1>
+        <p>Персональный спортивный рацион</p>
+    </div>
 
-        <div class="field">
-            <label>Возраст <i>(лет)</i></label>
-            <input type="number" id="age" placeholder="28" value="30" min="15" max="120" step="1">
-        </div>
+    <div class="gender-switch">
+        <div class="gender-btn active" id="btnMale" onclick="setGender('male')">МУЖЧИНА</div>
+        <div class="gender-btn" id="btnFemale" onclick="setGender('female')">ЖЕНЩИНА</div>
+    </div>
 
-        <div class="field">
-            <label>Рост <i>(см)</i></label>
-            <input type="number" id="height" placeholder="175" value="175" min="100" max="250" step="0.5">
+    <div class="grid-inputs">
+        <div class="input-group">
+            <label>ВОЗРАСТ</label>
+            <input type="number" id="age" value="25">
+        </div>
+        <div class="input-group">
+            <label>РОСТ (СМ)</label>
+            <input type="number" id="height" value="180">
+        </div>
+        <div class="input-group">
+            <label>ВЕС (КГ)</label>
+            <input type="number" id="weight" value="80">
         </div>
 
-        <div class="field">
-            <label>Вес <i>(кг)</i></label>
-            <input type="number" id="weight" placeholder="70" value="70" min="30" max="250" step="0.5">
-        </div>
-
-        <div class="field">
-            <label>Коэффициент активности</label>
+        <div class="input-group full-width">
+            <label>АКТИВНОСТЬ</label>
             <select id="activity">
-                <option value="1.2">1.2 — Минимальный (сидячий образ)</option>
-                <option value="1.375">1.375 — Низкий (тренировки 1-3 дня/нед)</option>
-                <option value="1.55" selected>1.55 — Средний (тренировки 3-5 дней/нед)</option>
-                <option value="1.725">1.725 — Высокий (ежедневные нагрузки)</option>
-                <option value="1.9">1.9 — Экстремальный (спорт + работа)</option>
+                <option value="1.2">Минимальная (сидячая)</option>
+                <option value="1.375">Низкая (1-2 раза в неделю)</option>
+                <option value="1.55" selected>Средняя (3-5 раз в неделю)</option>
+                <option value="1.725">Высокая (каждый день)</option>
+                <option value="1.9">Экстремальная (спорт + работа)</option>
             </select>
         </div>
 
-        <div class="field">
-            <label>Целевой вектор</label>
+        <div class="input-group full-width">
+            <label>ЦЕЛЬ</label>
             <select id="goal">
-                <option value="loss">Дефицит (Сушка / -15%)</option>
-                <option value="maintain" selected>Баланс (Поддержание формы)</option>
-                <option value="gain">Профицит (Набор массы / +15%)</option>
+                <option value="loss">Похудение (-15%)</option>
+                <option value="maintain" selected>Поддержание веса</option>
+                <option value="gain">Набор массы (+15%)</option>
             </select>
         </div>
+    </div>
 
-        <button class="calc-btn" id="calculateBtn">Сгенерировать протокол</button>
+    <button class="calc-btn" onclick="calculate()">Рассчитать результат</button>
 
-        <div id="resultContainer">
-            <div class="result-card" id="resultBlock">
-                <div class="result-header">
-                    <span>STATUS: Ожидание данных</span>
-                </div>
-                <div style="text-align: center; color: var(--text-muted); padding: 12px 6px;">
-                    Введите параметры системы для калибровки
-                </div>
+    <div class="results" id="resultsArea">
+        <div class="res-main">
+            <span>Ваша норма калорий:</span>
+            <strong id="resKcal">0</strong> <small style="font-size: 16px; color: var(--text-dim)">ккал</small>
+        </div>
+        <div class="macros">
+            <div class="macro-card">
+                <div id="resP">0</div>
+                <div>Белки</div>
+            </div>
+            <div class="macro-card">
+                <div id="resF">0</div>
+                <div>Жиры</div>
+            </div>
+            <div class="macro-card">
+                <div id="resC">0</div>
+                <div>Углеводы</div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
-    (function() {
-        const maleRadio = document.querySelector('input[value="male"]');
-        const ageInput = document.getElementById('age');
-        const heightInput = document.getElementById('height');
-        const weightInput = document.getElementById('weight');
-        const activitySelect = document.getElementById('activity');
-        const goalSelect = document.getElementById('goal');
-        const calcBtn = document.getElementById('calculateBtn');
-        const resultBlock = document.getElementById('resultBlock');
+    let currentGender = 'male';
 
-        const MACRO_RATIOS = { proteinPct: 25, fatPct: 20, carbPct: 55 };
+    function setGender(gender) {
+        currentGender = gender;
+        const container = document.getElementById('mainContainer');
+        const btnM = document.getElementById('btnMale');
+        const btnF = document.getElementById('btnFemale');
 
-        function getValidNumber(input, fieldName, minVal, maxVal, isInteger = false) {
-            let raw = input.value.trim();
-            if (raw === "") throw new Error(`Параметр "${fieldName}" не может быть пустым.`);
-            let num = isInteger ? parseInt(raw, 10) : parseFloat(raw);
-            if (isNaN(num)) throw new Error(`Параметр "${fieldName}" должен быть числом.`);
-            if (num < minVal || num > maxVal) throw new Error(`Диапазон "${fieldName}": от ${minVal} до ${maxVal}.`);
-            return num;
+        if (gender === 'female') {
+            container.classList.add('theme-female');
+            btnF.classList.add('active');
+            btnM.classList.remove('active');
+        } else {
+            container.classList.remove('theme-female');
+            btnM.classList.add('active');
+            btnF.classList.remove('active');
+        }
+        // Если уже есть результат, пересчитываем сразу при смене пола
+        if(document.getElementById('resultsArea').style.display === 'block') calculate();
+    }
+
+    function calculate() {
+        const age = parseFloat(document.getElementById('age').value);
+        const height = parseFloat(document.getElementById('height').value);
+        const weight = parseFloat(document.getElementById('weight').value);
+        const activity = parseFloat(document.getElementById('activity').value);
+        const goal = document.getElementById('goal').value;
+
+        if (!age || !height || !weight) return alert("Заполните все поля!");
+
+        // Формула Миффлина-Сан Жеора
+        let bmr;
+        if (currentGender === 'male') {
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+        } else {
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
         }
 
-        function getGoalFactor(goal) {
-            switch(goal) {
-                case 'loss': return 0.85;
-                case 'maintain': return 1.0;
-                case 'gain': return 1.15;
-                default: return 1.0;
-            }
-        }
+        // Применяем активность
+        let tdee = bmr * activity;
 
-        function calculate() {
-            try {
-                const age = getValidNumber(ageInput, 'Возраст', 15, 120, true);
-                const height = getValidNumber(heightInput, 'Рост', 100, 250, false);
-                const weight = getValidNumber(weightInput, 'Вес', 30, 250, false);
-                const gender = maleRadio.checked ? 'male' : 'female';
-                const activityFactor = parseFloat(activitySelect.value);
-                const goal = goalSelect.value;
-                const goalFactor = getGoalFactor(goal);
+        // Применяем цель
+        let goalFactor = 1;
+        if (goal === 'loss') goalFactor = 0.85;
+        if (goal === 'gain') goalFactor = 1.15;
 
-                // 1. Базовый метаболизм (BMR)
-                let bmr = (gender === 'male') 
-                    ? (10 * weight) + (6.25 * height) - (5 * age) + 5
-                    : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+        const finalKcal = Math.round(tdee * goalFactor);
 
-                if (bmr <= 0 || !isFinite(bmr)) throw new Error("Критическая ошибка вычисления BMR.");
+        // БЖУ (25% / 20% / 55%)
+        // Белки и жиры считаем по процентам
+        const pGrams = Math.round((finalKcal * 0.25) / 4);
+        const fGrams = Math.round((finalKcal * 0.20) / 9);
+        
+        // Углеводы — остаток, чтобы математика была идеальной
+        const cGrams = Math.round((finalKcal - (pGrams * 4) - (fGrams * 9)) / 4);
 
-                // 2. Итоговые калории с учетом активности и цели
-                let dailyCalories = Math.round(bmr * activityFactor * goalFactor);
-                if (dailyCalories <= 0) dailyCalories = 1200;
+        // Вывод на экран
+        document.getElementById('resKcal').innerText = finalKcal;
+        document.getElementById('resP').innerText = pGrams + 'г';
+        document.getElementById('resF').innerText = fGrams + 'г';
+        document.getElementById('resC').innerText = cGrams + 'г';
 
-                // 3. Точный расчет БЖУ с балансировкой под итоговые калории
-                const { proteinPct, fatPct } = MACRO_RATIOS;
-                
-                // Сначала считаем граммы белков и жиров, округляя до целого
-                let proteinGrams = Math.round((dailyCalories * (proteinPct / 100)) / 4);
-                let fatGrams = Math.round((dailyCalories * (fatPct / 100)) / 9);
-                
-                // Углеводы вычисляются из ТОЧНОГО остатка калорий во избежание нестыковок
-                let caloriesForCarbs = dailyCalories - (proteinGrams * 4) - (fatGrams * 9);
-                let carbsGrams = Math.round(caloriesForCarbs / 4);
-
-                // Защита от отрицательных значений при экстремально низких калориях
-                proteinGrams = Math.max(0, proteinGrams);
-                fatGrams = Math.max(0, fatGrams);
-                carbsGrams = Math.max(0, carbsGrams);
-
-                let goalText = goal === 'loss' ? "Дефицит" : goal === 'maintain' ? "Баланс" : "Профицит";
-
-                resultBlock.innerHTML = `
-                    <div class="result-header">
-                        <span style="color: var(--neon-blue)">[ ВЕКТОР: ${goalText.toUpperCase()} ]</span>
-                        <span style="font-size: 0.8rem; color: var(--text-muted);">АКТ: ${activityFactor}</span>
-                    </div>
-                    <div class="kcal-circle">
-                        <div class="kcal-label">Энергетический лимит</div>
-                        <div class="kcal-value">${dailyCalories}</div>
-                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: -5px; font-weight: bold;">ККАЛ / СУТКИ</div>
-                    </div>
-                    <div class="macros-grid">
-                        <div class="macro-item">
-                            <div class="macro-number">${proteinGrams}<span class="macro-unit">г</span></div>
-                            <div class="macro-name">Белки</div>
-                        </div>
-                        <div class="macro-item">
-                            <div class="macro-number">${fatGrams}<span class="macro-unit">г</span></div>
-                            <div class="macro-name">Жиры</div>
-                        </div>
-                        <div class="macro-item">
-                            <div class="macro-number">${carbsGrams}<span class="macro-unit">г</span></div>
-                            <div class="macro-name">Углеводы</div>
-                        </div>
-                    </div>
-                    <div class="footnote">
-                        Анализ завершен. Баланс калорий: (Б×4) + (Ж×9) + (У×4) = ${proteinGrams*4 + fatGrams*9 + carbsGrams*4} ккал.
-                    </div>
-                `;
-            } catch (err) {
-                resultBlock.innerHTML = `
-                    <div class="result-header">
-                        <span style="color: #ff4444">[ ОШИБКА СИСТЕМЫ ]</span>
-                    </div>
-                    <div class="error-message">
-                        ${err.message}
-                    </div>
-                `;
-            }
-        }
-
-        calcBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            calculate();
-        });
-
-        window.addEventListener('DOMContentLoaded', calculate);
-    })();
+        // Показываем блок с результатами
+        document.getElementById('resultsArea').style.display = 'block';
+    }
 </script>
+
 </body>
 </html>
