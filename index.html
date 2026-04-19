@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>NutriCalc PRO | Калории + БЖУ 25/20/55</title>
+    <title>NutriCalc PRO | Cyberpunk Edition</title>
     <style>
+        :root {
+            --bg-main: #050b14;
+            --bg-card: rgba(13, 20, 36, 0.7);
+            --neon-blue: #00f0ff;
+            --neon-blue-dim: rgba(0, 240, 255, 0.2);
+            --neon-blue-glow: rgba(0, 240, 255, 0.5);
+            --text-main: #e0fbfc;
+            --text-muted: #8b9bb4;
+            --border-color: rgba(0, 240, 255, 0.3);
+            --accent-gradient: linear-gradient(135deg, #0088ff, #00f0ff);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -13,26 +25,39 @@
         }
 
         body {
-            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef5 100%);
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: radial-gradient(circle at top right, #0a1428 0%, var(--bg-main) 100%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             padding: 24px 16px 48px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            color: var(--text-main);
         }
 
         .card {
             max-width: 520px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.97);
-            border-radius: 48px;
-            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.25), 0 2px 5px rgba(0, 0, 0, 0.02);
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px var(--neon-blue-dim) inset;
             overflow: hidden;
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--accent-gradient);
+            box-shadow: 0 0 15px var(--neon-blue);
         }
 
         .card-inner {
-            padding: 28px 24px 36px;
+            padding: 32px 28px;
         }
 
         .logo {
@@ -42,282 +67,269 @@
             flex-wrap: wrap;
             margin-bottom: 8px;
         }
+
         h1 {
-            font-size: 1.9rem;
+            font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(120deg, #1c3e55, #2b5f7a);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-blue-glow);
             letter-spacing: -0.5px;
+            text-transform: uppercase;
         }
+
         .badge {
-            background: #eef3fc;
+            background: rgba(0, 240, 255, 0.1);
             padding: 6px 12px;
             border-radius: 60px;
+            border: 1px solid var(--neon-blue);
             font-size: 0.7rem;
-            font-weight: 600;
-            color: #2c6e9e;
+            font-weight: 700;
+            color: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue-dim);
         }
+
         .subhead {
             font-size: 0.85rem;
-            color: #5b6f87;
-            border-left: 3px solid #3b8fc2;
+            color: var(--text-muted);
+            border-left: 2px solid var(--neon-blue);
             padding-left: 12px;
-            margin: 8px 0 24px 0;
-            font-weight: 450;
+            margin: 12px 0 28px 0;
+            line-height: 1.4;
         }
 
         .field {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
+
         label {
             font-weight: 600;
             font-size: 0.85rem;
-            color: #1e3a4d;
-            letter-spacing: -0.2px;
+            color: #a3b8cc;
+            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-transform: uppercase;
         }
-        .info-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 18px;
-            background: #cfdfef;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: bold;
-            color: #1f5e83;
-            cursor: help;
-            transition: 0.1s;
+
+        label i {
+            color: var(--text-muted);
+            text-transform: none;
+            font-style: normal;
+            font-weight: 400;
         }
-        .info-icon:hover {
-            background: #b7cee6;
-            transform: scale(1.05);
-        }
+
         input, select {
             width: 100%;
             padding: 16px 18px;
             font-size: 1rem;
-            border: 1.5px solid #e2edf7;
-            border-radius: 36px;
-            background: #ffffff;
-            transition: all 0.2s;
-            font-weight: 500;
-            color: #0a2636;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: #fff;
+            transition: all 0.3s;
             outline: none;
             font-family: inherit;
         }
+
         input:focus, select:focus {
-            border-color: #2e7eb0;
-            box-shadow: 0 0 0 3px rgba(46, 126, 176, 0.15);
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 15px var(--neon-blue-dim);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        select option {
+            background: var(--bg-main);
+            color: #fff;
         }
 
         .radio-group {
             display: flex;
-            gap: 20px;
-            background: #f9fbfe;
-            padding: 10px 16px;
-            border-radius: 60px;
-            border: 1px solid #e6edf6;
+            gap: 12px;
         }
+
         .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            flex: 1;
+            position: relative;
             cursor: pointer;
-            font-weight: 500;
-            font-size: 0.95rem;
         }
+
         .radio-option input {
-            width: 18px;
-            height: 18px;
-            accent-color: #2e7eb0;
-            margin: 0;
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
         }
 
-        .activity-select {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233a7ca5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
-            background-repeat: no-repeat;
-            background-position: right 18px center;
-            appearance: none;
-        }
-
-        .activity-hint {
-            background: #f3f8fe;
-            border-radius: 20px;
-            padding: 12px 16px;
-            margin-top: 6px;
-            font-size: 0.75rem;
-            color: #2c6280;
-            border-left: 3px solid #6ea8cf;
-            line-height: 1.4;
-        }
-        .hint-title {
-            font-weight: 700;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .hint-list {
-            list-style: none;
-            padding-left: 4px;
-        }
-        .hint-list li {
-            margin-bottom: 4px;
-            display: flex;
-            gap: 8px;
-        }
-        .hint-list li span:first-child {
+        .radio-box {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
             font-weight: 600;
-            min-width: 60px;
+            color: var(--text-muted);
+        }
+
+        .radio-option input:checked ~ .radio-box {
+            border-color: var(--neon-blue);
+            color: #fff;
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 15px var(--neon-blue-dim);
+            text-shadow: 0 0 5px var(--neon-blue-glow);
         }
 
         .calc-btn {
             width: 100%;
-            background: linear-gradient(105deg, #1f5e83, #2c7fb6);
+            background: var(--accent-gradient);
             border: none;
             padding: 18px 16px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: white;
-            border-radius: 60px;
-            margin: 16px 0 28px 0;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #000;
+            border-radius: 12px;
+            margin: 20px 0 28px 0;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 18px rgba(0, 50, 70, 0.2);
-            letter-spacing: 0.3px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px var(--neon-blue-glow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
+
+        .calc-btn:hover {
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: translateY(-2px);
+        }
+
         .calc-btn:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform: scale(0.98);
         }
 
         .result-card {
-            background: linear-gradient(125deg, #f0f7ff, #ffffff);
-            border-radius: 36px;
-            padding: 20px 20px;
-            border: 1px solid #cde3f5;
-            transition: all 0.2s;
-            box-shadow: 0 5px 12px rgba(0,0,0,0.02);
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 16px;
+            padding: 24px 20px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
         }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
         .result-header {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
-            color: #1f5779;
+            color: #fff;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
-            border-bottom: 2px solid #caddf0;
-            padding-bottom: 10px;
-            margin-bottom: 18px;
-        }
-        .kcal-circle {
-            background: #ffffffcc;
-            border-radius: 34px;
-            padding: 12px 16px;
-            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 12px;
             margin-bottom: 20px;
-            backdrop-filter: blur(2px);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.8);
         }
+
+        .kcal-circle {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
         .kcal-value {
-            font-size: 2.6rem;
-            font-weight: 800;
-            color: #1c6f9b;
-            letter-spacing: -1px;
-            line-height: 1;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            text-shadow: 0 0 20px var(--neon-blue-dim);
         }
+
         .kcal-label {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
-            color: #5887aa;
+            color: var(--neon-blue);
+            letter-spacing: 2px;
+            margin-bottom: 4px;
         }
+
         .macros-grid {
             display: flex;
-            flex-wrap: wrap;
             gap: 12px;
             justify-content: space-between;
-            margin-top: 6px;
         }
+
         .macro-item {
             flex: 1;
-            background: white;
-            border-radius: 28px;
-            padding: 14px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px 8px;
             text-align: center;
-            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.03);
-            border: 1px solid #e3effa;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: 0.3s;
         }
+
+        .macro-item:hover {
+            border-color: var(--neon-blue-dim);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
         .macro-number {
             font-size: 1.8rem;
             font-weight: 800;
-            color: #1f5779;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
+
         .macro-unit {
             font-size: 0.8rem;
+            color: var(--text-muted);
             font-weight: 500;
-            color: #5b7f9b;
         }
+
         .macro-name {
             font-size: 0.75rem;
             text-transform: uppercase;
             font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-top: 6px;
-            color: #4c6f8c;
+            letter-spacing: 1px;
+            margin-top: 8px;
+            color: var(--neon-blue);
         }
-        .macro-percent {
-            font-size: 0.7rem;
-            color: #7a9cbb;
-            margin-top: 4px;
-        }
-        hr {
-            margin: 16px 0 8px;
-            border: none;
-            border-top: 1px solid #d4e3f2;
-        }
+
         .footnote {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             text-align: center;
-            color: #6b8bad;
-            margin-top: 14px;
+            color: var(--text-muted);
+            margin-top: 16px;
+            line-height: 1.5;
         }
+
         .error-message {
-            background: #ffefef;
-            color: #bc3f2e;
+            background: rgba(255, 50, 50, 0.1);
+            color: #ff4444;
             padding: 16px;
-            border-radius: 32px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 50, 50, 0.3);
             font-weight: 500;
             font-size: 0.9rem;
             text-align: center;
         }
 
         @media (max-width: 480px) {
-            .card-inner {
-                padding: 20px 18px 28px;
-            }
-            .macro-number {
-                font-size: 1.5rem;
-            }
-            .kcal-value {
-                font-size: 2.2rem;
-            }
-            .radio-group {
-                gap: 12px;
-                padding: 8px 12px;
-            }
-            .hint-list li span:first-child {
-                min-width: 50px;
-            }
+            .card-inner { padding: 24px 20px; }
+            .kcal-value { font-size: 2.8rem; }
+            .macro-number { font-size: 1.5rem; }
+            .radio-group { flex-direction: column; gap: 8px; }
         }
     </style>
 </head>
@@ -325,93 +337,71 @@
 <div class="card">
     <div class="card-inner">
         <div class="logo">
-            <h1>⚡ NutriCalc</h1>
-            <div class="badge">25% белка · 20% жира · 55% углеводов</div>
+            <h1>NutriCalc</h1>
+            <div class="badge">SYS: 25/20/55</div>
         </div>
-        <div class="subhead">Рассчитай калории и БЖУ (25/20/55) с учётом пола, активности и цели</div>
+        <div class="subhead">Прогнозирование метаболизма и расчет БЖУ по формуле Миффлина-Сан Жеора</div>
 
-        <!-- Пол -->
         <div class="field">
-            <label>🧬 Пол</label>
+            <label>Пол</label>
             <div class="radio-group">
                 <label class="radio-option">
-                    <input type="radio" name="gender" value="male" checked> Мужской
+                    <input type="radio" name="gender" value="male" checked>
+                    <span class="radio-box">Мужской</span>
                 </label>
                 <label class="radio-option">
-                    <input type="radio" name="gender" value="female"> Женский
+                    <input type="radio" name="gender" value="female">
+                    <span class="radio-box">Женский</span>
                 </label>
             </div>
         </div>
 
-        <!-- Возраст -->
         <div class="field">
-            <label>📅 Возраст <i>(лет)</i></label>
+            <label>Возраст <i>(лет)</i></label>
             <input type="number" id="age" placeholder="28" value="30" min="15" max="120" step="1">
         </div>
 
-        <!-- Рост -->
         <div class="field">
-            <label>📏 Рост <i>(см)</i></label>
+            <label>Рост <i>(см)</i></label>
             <input type="number" id="height" placeholder="175" value="175" min="100" max="250" step="0.5">
         </div>
 
-        <!-- Вес -->
         <div class="field">
-            <label>⚖️ Вес <i>(кг)</i></label>
+            <label>Вес <i>(кг)</i></label>
             <input type="number" id="weight" placeholder="70" value="70" min="30" max="250" step="0.5">
         </div>
 
-        <!-- Уровень активности с рекомендациями -->
         <div class="field">
-            <label>
-                🏃‍♂️ Уровень активности
-                <span class="info-icon" title="Коэффициент активности умножается на BMR (базовый метаболизм) для получения расхода калорий в сутки. Выберите наиболее подходящий вариант.">?</span>
-            </label>
-            <select id="activity" class="activity-select">
-                <option value="1.2">🛋️ Минимальный (сидячий образ жизни)</option>
-                <option value="1.375">🚶‍♂️ Низкий (легкие прогулки 1-3 дня/нед)</option>
-                <option value="1.55" selected>🏋️ Средний (тренировки 3-5 дней/нед)</option>
-                <option value="1.725">🔥 Высокий (ежедневные нагрузки)</option>
-                <option value="1.9">⚡ Экстремальный (спорт + физ. работа)</option>
+            <label>Коэффициент активности</label>
+            <select id="activity">
+                <option value="1.2">1.2 — Минимальный (сидячий образ)</option>
+                <option value="1.375">1.375 — Низкий (тренировки 1-3 дня/нед)</option>
+                <option value="1.55" selected>1.55 — Средний (тренировки 3-5 дней/нед)</option>
+                <option value="1.725">1.725 — Высокий (ежедневные нагрузки)</option>
+                <option value="1.9">1.9 — Экстремальный (спорт + работа)</option>
             </select>
-            <div class="activity-hint">
-                <div class="hint-title">📘 Рекомендации по выбору активности:</div>
-                <ul class="hint-list">
-                    <li><span>🛋️ 1.2</span> — Офисная работа, минимум движения, нет спорта</li>
-                    <li><span>🚶 1.375</span> — Лёгкие прогулки или тренировки 1-3 раза в неделю</li>
-                    <li><span>🏋️ 1.55</span> — Умеренные тренировки 3-5 раз в неделю (актуально для большинства)</li>
-                    <li><span>🔥 1.725</span> — Ежедневные интенсивные тренировки / активная работа</li>
-                    <li><span>⚡ 1.9</span> — Профессиональный спорт или тяжёлый физический труд</li>
-                </ul>
-                <div style="font-size:0.7rem; margin-top: 6px;">* Коэффициент используется для расчёта дневной нормы калорий.</div>
-            </div>
         </div>
 
-        <!-- Цель -->
         <div class="field">
-            <label>🎯 Цель</label>
+            <label>Целевой вектор</label>
             <select id="goal">
-                <option value="loss">🔥 Похудение (дефицит 15%)</option>
-                <option value="maintain" selected>✨ Поддержание формы</option>
-                <option value="gain">💪 Набор массы (профицит 15%)</option>
+                <option value="loss">Дефицит (Сушка / -15%)</option>
+                <option value="maintain" selected>Баланс (Поддержание формы)</option>
+                <option value="gain">Профицит (Набор массы / +15%)</option>
             </select>
         </div>
 
-        <button class="calc-btn" id="calculateBtn">Рассчитать норму →</button>
+        <button class="calc-btn" id="calculateBtn">Сгенерировать протокол</button>
 
-        <!-- Результат -->
         <div id="resultContainer">
             <div class="result-card" id="resultBlock">
                 <div class="result-header">
-                    <span>📊 Ваш персональный расчёт</span>
+                    <span>STATUS: Ожидание данных</span>
                 </div>
-                <div style="text-align: center; color: #54738f; padding: 12px 6px;">
-                    Заполните параметры и нажмите «Рассчитать»
+                <div style="text-align: center; color: var(--text-muted); padding: 12px 6px;">
+                    Введите параметры системы для калибровки
                 </div>
             </div>
-        </div>
-        <div class="footnote">
-            Формула Миффлина-Сан Жеора × активность × цель. Распределение БЖУ: 25% белков, 20% жиров, 55% углеводов.
         </div>
     </div>
 </div>
@@ -419,7 +409,6 @@
 <script>
     (function() {
         const maleRadio = document.querySelector('input[value="male"]');
-        const femaleRadio = document.querySelector('input[value="female"]');
         const ageInput = document.getElementById('age');
         const heightInput = document.getElementById('height');
         const weightInput = document.getElementById('weight');
@@ -428,28 +417,17 @@
         const calcBtn = document.getElementById('calculateBtn');
         const resultBlock = document.getElementById('resultBlock');
 
-        // НОВЫЕ ПРОЦЕНТЫ БЖУ для всех целей (25/20/55)
-        const MACRO_RATIOS = {
-            proteinPct: 25,
-            fatPct: 20,
-            carbPct: 55
-        };
+        const MACRO_RATIOS = { proteinPct: 25, fatPct: 20, carbPct: 55 };
 
         function getValidNumber(input, fieldName, minVal, maxVal, isInteger = false) {
             let raw = input.value.trim();
-            if (raw === "") throw new Error(`${fieldName} не может быть пустым.`);
+            if (raw === "") throw new Error(`Параметр "${fieldName}" не может быть пустым.`);
             let num = isInteger ? parseInt(raw, 10) : parseFloat(raw);
-            if (isNaN(num)) throw new Error(`${fieldName} должно быть числом.`);
-            if (isInteger && !Number.isInteger(num)) throw new Error(`${fieldName} должно быть целым числом.`);
-            if (num < minVal || num > maxVal) throw new Error(`${fieldName} должно быть от ${minVal} до ${maxVal}.`);
+            if (isNaN(num)) throw new Error(`Параметр "${fieldName}" должен быть числом.`);
+            if (num < minVal || num > maxVal) throw new Error(`Диапазон "${fieldName}": от ${minVal} до ${maxVal}.`);
             return num;
         }
 
-        function getGender() {
-            return maleRadio.checked ? 'male' : 'female';
-        }
-
-        // Коррекция калорий под цель (коэффициенты), но проценты БЖУ единые
         function getGoalFactor(goal) {
             switch(goal) {
                 case 'loss': return 0.85;
@@ -464,89 +442,75 @@
                 const age = getValidNumber(ageInput, 'Возраст', 15, 120, true);
                 const height = getValidNumber(heightInput, 'Рост', 100, 250, false);
                 const weight = getValidNumber(weightInput, 'Вес', 30, 250, false);
-                const gender = getGender();
+                const gender = maleRadio.checked ? 'male' : 'female';
                 const activityFactor = parseFloat(activitySelect.value);
                 const goal = goalSelect.value;
                 const goalFactor = getGoalFactor(goal);
 
-                // 1. BMR по Миффлину-Сан Жеору
-                let bmr;
-                if (gender === 'male') {
-                    bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-                } else {
-                    bmr = 10 * weight + 6.25 * height - 5 * age - 161;
-                }
-                if (bmr <= 0 || !isFinite(bmr)) throw new Error("Некорректный базовый метаболизм.");
+                // 1. Базовый метаболизм (BMR)
+                let bmr = (gender === 'male') 
+                    ? (10 * weight) + (6.25 * height) - (5 * age) + 5
+                    : (10 * weight) + (6.25 * height) - (5 * age) - 161;
 
-                // 2. TDEE с активностью
-                let tdee = bmr * activityFactor;
-                // 3. Коррекция по цели
-                let dailyCalories = tdee * goalFactor;
-                dailyCalories = Math.round(dailyCalories);
-                if (dailyCalories <= 0) dailyCalories = 1200; // страховка
+                if (bmr <= 0 || !isFinite(bmr)) throw new Error("Критическая ошибка вычисления BMR.");
 
-                // 4. Расчёт БЖУ в граммах (единые проценты 25/20/55)
-                const { proteinPct, fatPct, carbPct } = MACRO_RATIOS;
-                let proteinGrams = (dailyCalories * (proteinPct / 100)) / 4;
-                let fatGrams = (dailyCalories * (fatPct / 100)) / 9;
-                let carbsGrams = (dailyCalories * (carbPct / 100)) / 4;
+                // 2. Итоговые калории с учетом активности и цели
+                let dailyCalories = Math.round(bmr * activityFactor * goalFactor);
+                if (dailyCalories <= 0) dailyCalories = 1200;
 
-                // Округление до целых граммов
-                proteinGrams = Math.round(proteinGrams);
-                fatGrams = Math.round(fatGrams);
-                carbsGrams = Math.round(carbsGrams);
-                if (proteinGrams < 0) proteinGrams = 0;
-                if (fatGrams < 0) fatGrams = 0;
-                if (carbsGrams < 0) carbsGrams = 0;
+                // 3. Точный расчет БЖУ с балансировкой под итоговые калории
+                const { proteinPct, fatPct } = MACRO_RATIOS;
+                
+                // Сначала считаем граммы белков и жиров, округляя до целого
+                let proteinGrams = Math.round((dailyCalories * (proteinPct / 100)) / 4);
+                let fatGrams = Math.round((dailyCalories * (fatPct / 100)) / 9);
+                
+                // Углеводы вычисляются из ТОЧНОГО остатка калорий во избежание нестыковок
+                let caloriesForCarbs = dailyCalories - (proteinGrams * 4) - (fatGrams * 9);
+                let carbsGrams = Math.round(caloriesForCarbs / 4);
 
-                // Текст цели для отображения
-                let goalText = "";
-                if (goal === 'loss') goalText = "🔥 Похудение (дефицит 15%)";
-                else if (goal === 'maintain') goalText = "✨ Поддержание формы";
-                else goalText = "💪 Набор массы (профицит 15%)";
+                // Защита от отрицательных значений при экстремально низких калориях
+                proteinGrams = Math.max(0, proteinGrams);
+                fatGrams = Math.max(0, fatGrams);
+                carbsGrams = Math.max(0, carbsGrams);
 
-                let activityShort = activitySelect.options[activitySelect.selectedIndex]?.text.split(' ')[0] || "Активность";
+                let goalText = goal === 'loss' ? "Дефицит" : goal === 'maintain' ? "Баланс" : "Профицит";
 
                 resultBlock.innerHTML = `
                     <div class="result-header">
-                        <span>🎯 ${goalText}</span>
-                        <span style="font-size:0.7rem; background:#e7f0f9; padding:4px 8px; border-radius:40px;">${activityShort}</span>
+                        <span style="color: var(--neon-blue)">[ ВЕКТОР: ${goalText.toUpperCase()} ]</span>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">АКТ: ${activityFactor}</span>
                     </div>
                     <div class="kcal-circle">
-                        <div class="kcal-label">Суточная норма калорий</div>
-                        <div class="kcal-value">${dailyCalories} <span style="font-size:1.2rem;">ккал</span></div>
+                        <div class="kcal-label">Энергетический лимит</div>
+                        <div class="kcal-value">${dailyCalories}</div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem; margin-top: -5px; font-weight: bold;">ККАЛ / СУТКИ</div>
                     </div>
                     <div class="macros-grid">
                         <div class="macro-item">
-                            <div class="macro-number">${proteinGrams} <span class="macro-unit">г</span></div>
-                            <div class="macro-name">🥩 Белки</div>
-                            <div class="macro-percent">${proteinPct}% от калорий</div>
+                            <div class="macro-number">${proteinGrams}<span class="macro-unit">г</span></div>
+                            <div class="macro-name">Белки</div>
                         </div>
                         <div class="macro-item">
-                            <div class="macro-number">${fatGrams} <span class="macro-unit">г</span></div>
-                            <div class="macro-name">🧈 Жиры</div>
-                            <div class="macro-percent">${fatPct}% от калорий</div>
+                            <div class="macro-number">${fatGrams}<span class="macro-unit">г</span></div>
+                            <div class="macro-name">Жиры</div>
                         </div>
                         <div class="macro-item">
-                            <div class="macro-number">${carbsGrams} <span class="macro-unit">г</span></div>
-                            <div class="macro-name">🍚 Углеводы</div>
-                            <div class="macro-percent">${carbPct}% от калорий</div>
+                            <div class="macro-number">${carbsGrams}<span class="macro-unit">г</span></div>
+                            <div class="macro-name">Углеводы</div>
                         </div>
                     </div>
-                    <hr>
-                    <div class="footnote" style="margin-top: 10px;">
-                        ✅ BMR × активность (${activityFactor}) × цель (${goalFactor})<br>
-                        Распределение БЖУ: белки 25% | жиры 20% | углеводы 55%
+                    <div class="footnote">
+                        Анализ завершен. Баланс калорий: (Б×4) + (Ж×9) + (У×4) = ${proteinGrams*4 + fatGrams*9 + carbsGrams*4} ккал.
                     </div>
                 `;
             } catch (err) {
                 resultBlock.innerHTML = `
                     <div class="result-header">
-                        <span>⚠️ Ошибка</span>
+                        <span style="color: #ff4444">[ ОШИБКА СИСТЕМЫ ]</span>
                     </div>
                     <div class="error-message">
-                        ${err.message}<br>
-                        <span style="font-size:0.75rem;">Проверьте возраст (15-120), рост (100-250 см), вес (30-250 кг)</span>
+                        ${err.message}
                     </div>
                 `;
             }
@@ -557,9 +521,7 @@
             calculate();
         });
 
-        window.addEventListener('DOMContentLoaded', () => {
-            calculate();
-        });
+        window.addEventListener('DOMContentLoaded', calculate);
     })();
 </script>
 </body>
