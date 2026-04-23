@@ -3,37 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NutriCalc Sport Pro</title>
+    <title>NutriCalc</title>
     <style>
         :root {
-            /* Дефолтная мужская тема */
+            /* Светлая тема */
             --accent: #007AFF;
             --accent-gradient: linear-gradient(135deg, #007AFF, #00C6FF);
-            --accent-shadow: rgba(0, 122, 255, 0.4);
-            --bg-dark: #0F1218;
-            --card-bg: #1C212D;
-            --input-bg: #252B38;
-            --text-main: #FFFFFF;
-            --text-dim: #8E97A4;
+            --accent-shadow: rgba(0, 122, 255, 0.2);
+            --bg-light: #F2F2F7;
+            --card-bg: #FFFFFF;
+            --input-bg: #F9F9FB;
+            --text-main: #1C1C1E;
+            --text-dim: #8E8E93;
+            --border: #E5E5EA;
         }
 
-        /* Класс для женской темы (переключается через JS) */
         .theme-female {
             --accent: #FF2D55;
             --accent-gradient: linear-gradient(135deg, #FF2D55, #FF5E7B);
-            --accent-shadow: rgba(255, 45, 85, 0.4);
+            --accent-shadow: rgba(255, 45, 85, 0.2);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, sans-serif;
-            transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            transition: all 0.3s ease;
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-light);
             color: var(--text-main);
             display: flex;
             justify-content: center;
@@ -46,10 +46,10 @@
             max-width: 450px;
             width: 100%;
             background: var(--card-bg);
-            border-radius: 30px;
+            border-radius: 25px;
             padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
         }
 
         .header {
@@ -58,71 +58,65 @@
         }
 
         .header h1 {
-            font-size: 22px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .header p {
-            color: var(--text-dim);
-            font-size: 13px;
-        }
-
-        /* Селектор пола */
         .gender-switch {
             display: flex;
             background: var(--input-bg);
-            padding: 5px;
-            border-radius: 15px;
+            padding: 4px;
+            border-radius: 12px;
             margin-bottom: 25px;
+            border: 1px solid var(--border);
         }
 
         .gender-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             text-align: center;
             cursor: pointer;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 13px;
             color: var(--text-dim);
         }
 
         .gender-btn.active {
-            background: var(--accent-gradient);
-            color: white;
-            box-shadow: 0 4px 15px var(--accent-shadow);
+            background: #FFFFFF;
+            color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* Поля ввода */
         .grid-inputs {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .input-group label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-dim);
-            font-weight: 600;
-            padding-left: 5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding-left: 4px;
         }
 
         input, select {
             background: var(--input-bg);
-            border: 1px solid transparent;
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 16px;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 600;
             outline: none;
             width: 100%;
@@ -130,87 +124,79 @@
 
         input:focus, select:focus {
             border-color: var(--accent);
+            background: #FFFFFF;
         }
 
         .full-width {
             grid-column: span 3;
-            margin-top: 10px;
         }
 
-        /* Кнопка */
         .calc-btn {
             background: var(--accent-gradient);
             color: white;
             border: none;
             width: 100%;
-            padding: 18px;
-            border-radius: 18px;
+            padding: 16px;
+            border-radius: 14px;
             font-size: 16px;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
             margin-top: 10px;
-            box-shadow: 0 10px 20px var(--accent-shadow);
-            text-transform: uppercase;
+            box-shadow: 0 8px 15px var(--accent-shadow);
         }
 
-        .calc-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Результаты */
         .results {
-            margin-top: 30px;
-            background: rgba(0,0,0,0.2);
-            border-radius: 20px;
+            margin-top: 25px;
+            background: var(--input-bg);
+            border-radius: 18px;
             padding: 20px;
-            display: none; /* Появится после расчета */
+            display: none;
+            border: 1px solid var(--border);
         }
 
         .res-main {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .res-main span {
             display: block;
             font-size: 12px;
             color: var(--text-dim);
-            text-transform: uppercase;
-            margin-bottom: 5px;
+            font-weight: 600;
         }
 
         .res-main strong {
-            font-size: 42px;
-            color: var(--accent);
-            line-height: 1;
+            font-size: 36px;
+            color: var(--text-main);
         }
 
         .macros {
             display: flex;
             justify-content: space-between;
-            gap: 10px;
+            gap: 8px;
         }
 
         .macro-card {
             flex: 1;
-            background: var(--input-bg);
-            padding: 15px 10px;
-            border-radius: 15px;
+            background: #FFFFFF;
+            padding: 12px 5px;
+            border-radius: 12px;
             text-align: center;
-            border-bottom: 3px solid var(--accent);
+            border: 1px solid var(--border);
         }
 
         .macro-card div:first-child {
-            font-size: 18px;
-            font-weight: 800;
-            margin-bottom: 5px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--accent);
         }
 
         .macro-card div:last-child {
             font-size: 10px;
             color: var(--text-dim);
-            text-transform: uppercase;
             font-weight: 700;
+            text-transform: uppercase;
         }
 
         @media (max-width: 400px) {
@@ -223,8 +209,7 @@
 
 <div class="container" id="mainContainer">
     <div class="header">
-        <h1>NutriCalc <span style="font-weight: 300;">PRO</span></h1>
-        <p>Персональный спортивный рацион</p>
+        <h1>NutriCalc</h1>
     </div>
 
     <div class="gender-switch">
@@ -234,45 +219,44 @@
 
     <div class="grid-inputs">
         <div class="input-group">
-            <label>ВОЗРАСТ</label>
-            <input type="number" id="age" value="25">
+            <label>Возраст</label>
+            <input type="number" id="age" value="25" min="10">
         </div>
         <div class="input-group">
-            <label>РОСТ (СМ)</label>
-            <input type="number" id="height" value="180">
+            <label>Рост</label>
+            <input type="number" id="height" value="180" min="100">
         </div>
         <div class="input-group">
-            <label>ВЕС (КГ)</label>
-            <input type="number" id="weight" value="80">
+            <label>Вес</label>
+            <input type="number" id="weight" value="80" min="30">
         </div>
 
         <div class="input-group full-width">
-            <label>АКТИВНОСТЬ</label>
+            <label>Активность</label>
             <select id="activity">
-                <option value="1.2">Минимальная (сидячая)</option>
-                <option value="1.375">Низкая (1-2 раза в неделю)</option>
-                <option value="1.55" selected>Средняя (3-5 раз в неделю)</option>
-                <option value="1.725">Высокая (каждый день)</option>
-                <option value="1.9">Экстремальная (спорт + работа)</option>
+                <option value="1.1">Минимальная</option>
+                <option value="1.2">Низкая</option>
+                <option value="1.35" selected>Средняя</option>
+                <option value="1.55">Высокая</option>
             </select>
         </div>
 
         <div class="input-group full-width">
-            <label>ЦЕЛЬ</label>
+            <label>Цель</label>
             <select id="goal">
-                <option value="loss">Похудение (-15%)</option>
+                <option value="loss">Похудение (-20%)</option>
                 <option value="maintain" selected>Поддержание веса</option>
-                <option value="gain">Набор массы (+15%)</option>
+                <option value="gain">Набор массы (+10%)</option>
             </select>
         </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Рассчитать результат</button>
+    <button class="calc-btn" onclick="calculate()">Рассчитать</button>
 
     <div class="results" id="resultsArea">
         <div class="res-main">
-            <span>Ваша норма калорий:</span>
-            <strong id="resKcal">0</strong> <small style="font-size: 16px; color: var(--text-dim)">ккал</small>
+            <span>Ваша норма:</span>
+            <strong id="resKcal">0</strong> <small style="font-size: 14px; color: var(--text-dim)">ккал</small>
         </div>
         <div class="macros">
             <div class="macro-card">
@@ -309,7 +293,6 @@
             btnM.classList.add('active');
             btnF.classList.remove('active');
         }
-        // Если уже есть результат, пересчитываем сразу при смене пола
         if(document.getElementById('resultsArea').style.display === 'block') calculate();
     }
 
@@ -320,41 +303,36 @@
         const activity = parseFloat(document.getElementById('activity').value);
         const goal = document.getElementById('goal').value;
 
-        if (!age || !height || !weight) return alert("Заполните все поля!");
+        if (!age || !height || !weight) return;
 
-        // Формула Миффлина-Сан Жеора
+        // Измененные формулы (уменьшенные коэффициенты)
         let bmr;
         if (currentGender === 'male') {
-            bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+            // Чуть более консервативный расчет
+            bmr = (9.2 * weight) + (4.8 * height) - (5.2 * age) - 20;
         } else {
-            bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+            bmr = (8.8 * weight) + (4.2 * height) - (4.8 * age) - 170;
         }
 
-        // Применяем активность
         let tdee = bmr * activity;
 
-        // Применяем цель
+        // Повышенный дефицит для похудения и уменьшенный профицит для набора
         let goalFactor = 1;
-        if (goal === 'loss') goalFactor = 0.85;
-        if (goal === 'gain') goalFactor = 1.15;
+        if (goal === 'loss') goalFactor = 0.80; // -20% вместо -15%
+        if (goal === 'gain') goalFactor = 1.10; // +10% вместо +15%
 
         const finalKcal = Math.round(tdee * goalFactor);
 
-        // БЖУ (25% / 20% / 55%)
-        // Белки и жиры считаем по процентам
-        const pGrams = Math.round((finalKcal * 0.25) / 4);
-        const fGrams = Math.round((finalKcal * 0.20) / 9);
-        
-        // Углеводы — остаток, чтобы математика была идеальной
+        // БЖУ: Акцент на белок, меньше углеводов
+        const pGrams = Math.round((finalKcal * 0.30) / 4);
+        const fGrams = Math.round((finalKcal * 0.25) / 9);
         const cGrams = Math.round((finalKcal - (pGrams * 4) - (fGrams * 9)) / 4);
 
-        // Вывод на экран
         document.getElementById('resKcal').innerText = finalKcal;
         document.getElementById('resP').innerText = pGrams + 'г';
         document.getElementById('resF').innerText = fGrams + 'г';
         document.getElementById('resC').innerText = cGrams + 'г';
 
-        // Показываем блок с результатами
         document.getElementById('resultsArea').style.display = 'block';
     }
 </script>
