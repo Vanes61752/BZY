@@ -6,7 +6,7 @@
     <title>NutriCalc</title>
     <style>
         :root {
-            /* Светлая тема */
+            /* Light theme */
             --accent: #007AFF;
             --accent-gradient: linear-gradient(135deg, #007AFF, #00C6FF);
             --accent-shadow: rgba(0, 122, 255, 0.2);
@@ -224,32 +224,33 @@
     <div class="grid-inputs">
         <div class="input-group">
             <label>Возраст</label>
-            <input type="number" id="age" value="25" min="10" max="100">
+            <input type="number" id="age" value="21" min="10" max="100">
         </div>
         <div class="input-group">
             <label>Рост (см)</label>
-            <input type="number" id="height" value="180" min="100" max="250">
+            <input type="number" id="height" value="178" min="100" max="250">
         </div>
         <div class="input-group">
             <label>Вес (кг)</label>
-            <input type="number" id="weight" value="80" min="30" max="250">
+            <input type="number" id="weight" value="77" min="30" max="250">
         </div>
 
         <div class="input-group full-width">
             <label>Уровень активности</label>
             <select id="activity">
                 <option value="1.2">Минимальная (сидячая работа)</option>
-                <option value="1.375">Низкая (1-3 тренировки в неделю)</option>
-                <option value="1.55" selected>Средняя (3-5 тренировок в неделю)</option>
-                <option value="1.725">Высокая (каждый день или физ. труд)</option>
+                <option value="1.375" selected>Низкая (1-3 тренировки в неделю)</option>
+                <option value="1.55">Средняя (3-5 тренировок в неделю)</option>
+				<option value="1.725">Высокая (ежедневные тренировки)</option>
+                <option value="1.9">Экстремальная (профессиональный спорт)</option>
             </select>
         </div>
 
         <div class="input-group full-width">
             <label>Ваша цель</label>
             <select id="goal">
-                <option value="loss">Похудение (-15% дефицит)</option>
-                <option value="maintain" selected>Поддержание веса (баланс)</option>
+                <option value="loss" selected>Похудение (-15% дефицит)</option>
+                <option value="maintain">Поддержание веса (баланс)</option>
                 <option value="gain">Набор массы (+15% профицит)</option>
             </select>
         </div>
@@ -298,7 +299,7 @@
             btnF.classList.remove('active');
         }
         
-        // Автоматический пересчет при смене пола, если результаты уже открыты
+        // Auto recalc on gender change if results are open
         if(document.getElementById('resultsArea').style.display === 'block') calculate();
     }
 
@@ -309,60 +310,64 @@
         const activity = parseFloat(document.getElementById('activity').value);
         const goal = document.getElementById('goal').value;
 
-        // Базовая защита от некорректных данных
+        // Base validation
         if (!age || !height || !weight || age <= 0 || height <= 0 || weight <= 0) {
             alert('Пожалуйста, введите корректные значения.');
             return;
         }
 
-        // Формула Миффлина — Сан-Жеора (Mifflin-St Jeor) - золотой стандарт
-        let bmr; // Базальный метаболизм
+        // Mifflin-St Jeor Formula
+        let bmr;
         if (currentGender === 'male') {
             bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
         } else {
             bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
         }
 
-        // TDEE - общий суточный расход энергии
+        // TDEE (Total Daily Energy Expenditure)
         let tdee = bmr * activity;
 
-        // Корректировка калорий под цель и "умное" распределение БЖУ
+        // Adjust calories based on goal
         let finalKcal = tdee;
-        let pRatio, fRatio, cRatio;
-
         if (goal === 'loss') {
-            finalKcal = tdee * 0.85; // Здоровый дефицит 15%
-            // На похудении увеличиваем долю белка для сохранения мышц
-            pRatio = 0.35; 
-            fRatio = 0.30; 
-            cRatio = 0.35;
+            finalKcal = tdee * 0.85;
         } else if (goal === 'gain') {
-            finalKcal = tdee * 1.15; // Профицит 15%
-            // На наборе нужно больше углеводов для энергии и гликогена
-            pRatio = 0.25; 
-            fRatio = 0.25; 
-            cRatio = 0.50; 
-        } else { // maintain
-            // Классический баланс для поддержания
-            pRatio = 0.30; 
-            fRatio = 0.30; 
-            cRatio = 0.40; 
+            finalKcal = tdee * 1.15;
         }
-
         finalKcal = Math.round(finalKcal);
 
-        // Перевод процентов в граммы (Белки и Углеводы по 4 ккал на грамм, Жиры по 9 ккал)
-        const pGrams = Math.round((finalKcal * pRatio) / 4);
-        const fGrams = Math.round((finalKcal * fRatio) / 9);
-        const cGrams = Math.round((finalKcal * cRatio) / 4);
+        // Macro Calculation (based on weight and leftovers)
+        let weightInLbs = weight * 2.20462;
+        
+        // 1. Calculate Fat
+        let fatGrams;
+        if (currentGender === 'male') {
+            fatGrams = (1 * weightInLbs) * 0.3;
+        } else {
+            fatGrams = (1 * weightInLbs) * 0.4;
+        }
+        
+        // 2. Calculate Protein
+        let proteinGrams = (1.5 * weightInLbs) * 0.3;
+        
+        // 3. Calculate Carbs based on leftover calories
+        let fatCalories = fatGrams * 9;
+        let proteinCalories = proteinGrams * 4;
+        let leftoverCaloriesForCarbs = finalKcal - (fatCalories + proteinCalories);
+        let carbGrams = leftoverCaloriesForCarbs / 4;
+        
+        // Round the final results
+        let finalFatGrams = Math.round(fatGrams);
+        let finalProteinGrams = Math.round(proteinGrams);
+        let finalCarbGrams = Math.round(carbGrams);
 
-        // Вывод на экран
+        // Display the results
         document.getElementById('resKcal').innerText = finalKcal;
-        document.getElementById('resP').innerText = pGrams + 'г';
-        document.getElementById('resF').innerText = fGrams + 'г';
-        document.getElementById('resC').innerText = cGrams + 'г';
+        document.getElementById('resP').innerText = finalProteinGrams + 'г';
+        document.getElementById('resF').innerText = finalFatGrams + 'г';
+        document.getElementById('resC').innerText = finalCarbGrams + 'г';
 
-        // Показываем блок с результатами
+        // Show results area
         document.getElementById('resultsArea').style.display = 'block';
     }
 </script>
