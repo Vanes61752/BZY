@@ -145,6 +145,10 @@
             box-shadow: 0 8px 15px var(--accent-shadow);
         }
 
+        .calc-btn:active {
+            transform: scale(0.98);
+        }
+
         .results {
             margin-top: 25px;
             background: var(--input-bg);
@@ -213,49 +217,49 @@
     </div>
 
     <div class="gender-switch">
-        <div class="gender-btn active" id="btnMale" onclick="setGender('male')">МУЖЧИНА</div>
-        <div class="gender-btn" id="btnFemale" onclick="setGender('female')">ЖЕНЩИНА</div>
+        <button class="gender-btn active" id="btnMale" onclick="setGender('male')">МУЖЧИНА</button>
+        <button class="gender-btn" id="btnFemale" onclick="setGender('female')">ЖЕНЩИНА</button>
     </div>
 
     <div class="grid-inputs">
         <div class="input-group">
             <label>Возраст</label>
-            <input type="number" id="age" value="25" min="10">
+            <input type="number" id="age" value="25" min="10" max="100">
         </div>
         <div class="input-group">
-            <label>Рост</label>
-            <input type="number" id="height" value="180" min="100">
+            <label>Рост (см)</label>
+            <input type="number" id="height" value="180" min="100" max="250">
         </div>
         <div class="input-group">
-            <label>Вес</label>
-            <input type="number" id="weight" value="80" min="30">
+            <label>Вес (кг)</label>
+            <input type="number" id="weight" value="80" min="30" max="250">
         </div>
 
         <div class="input-group full-width">
-            <label>Активность</label>
+            <label>Уровень активности</label>
             <select id="activity">
-                <option value="1.1">Минимальная</option>
-                <option value="1.2">Низкая</option>
-                <option value="1.35" selected>Средняя</option>
-                <option value="1.55">Высокая</option>
+                <option value="1.2">Минимальная (сидячая работа)</option>
+                <option value="1.375">Низкая (1-3 тренировки в неделю)</option>
+                <option value="1.55" selected>Средняя (3-5 тренировок в неделю)</option>
+                <option value="1.725">Высокая (каждый день или физ. труд)</option>
             </select>
         </div>
 
         <div class="input-group full-width">
-            <label>Цель</label>
+            <label>Ваша цель</label>
             <select id="goal">
-                <option value="loss">Похудение (-20%)</option>
-                <option value="maintain" selected>Поддержание веса</option>
-                <option value="gain">Набор массы (+10%)</option>
+                <option value="loss">Похудение (-15% дефицит)</option>
+                <option value="maintain" selected>Поддержание веса (баланс)</option>
+                <option value="gain">Набор массы (+15% профицит)</option>
             </select>
         </div>
     </div>
 
-    <button class="calc-btn" onclick="calculate()">Рассчитать</button>
+    <button class="calc-btn" onclick="calculate()">Рассчитать норму</button>
 
     <div class="results" id="resultsArea">
         <div class="res-main">
-            <span>Ваша норма:</span>
+            <span>СУТОЧНАЯ НОРМА:</span>
             <strong id="resKcal">0</strong> <small style="font-size: 14px; color: var(--text-dim)">ккал</small>
         </div>
         <div class="macros">
@@ -293,6 +297,8 @@
             btnM.classList.add('active');
             btnF.classList.remove('active');
         }
+        
+        // Автоматический пересчет при смене пола, если результаты уже открыты
         if(document.getElementById('resultsArea').style.display === 'block') calculate();
     }
 
@@ -303,36 +309,60 @@
         const activity = parseFloat(document.getElementById('activity').value);
         const goal = document.getElementById('goal').value;
 
-        if (!age || !height || !weight) return;
-
-        // Измененные формулы (уменьшенные коэффициенты)
-        let bmr;
-        if (currentGender === 'male') {
-            // Чуть более консервативный расчет
-            bmr = (9.2 * weight) + (4.8 * height) - (5.2 * age) - 20;
-        } else {
-            bmr = (8.8 * weight) + (4.2 * height) - (4.8 * age) - 170;
+        // Базовая защита от некорректных данных
+        if (!age || !height || !weight || age <= 0 || height <= 0 || weight <= 0) {
+            alert('Пожалуйста, введите корректные значения.');
+            return;
         }
 
+        // Формула Миффлина — Сан-Жеора (Mifflin-St Jeor) - золотой стандарт
+        let bmr; // Базальный метаболизм
+        if (currentGender === 'male') {
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+        } else {
+            bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+        }
+
+        // TDEE - общий суточный расход энергии
         let tdee = bmr * activity;
 
-        // Повышенный дефицит для похудения и уменьшенный профицит для набора
-        let goalFactor = 1;
-        if (goal === 'loss') goalFactor = 0.80; // -20% вместо -15%
-        if (goal === 'gain') goalFactor = 1.10; // +10% вместо +15%
+        // Корректировка калорий под цель и "умное" распределение БЖУ
+        let finalKcal = tdee;
+        let pRatio, fRatio, cRatio;
 
-        const finalKcal = Math.round(tdee * goalFactor);
+        if (goal === 'loss') {
+            finalKcal = tdee * 0.85; // Здоровый дефицит 15%
+            // На похудении увеличиваем долю белка для сохранения мышц
+            pRatio = 0.35; 
+            fRatio = 0.30; 
+            cRatio = 0.35;
+        } else if (goal === 'gain') {
+            finalKcal = tdee * 1.15; // Профицит 15%
+            // На наборе нужно больше углеводов для энергии и гликогена
+            pRatio = 0.25; 
+            fRatio = 0.25; 
+            cRatio = 0.50; 
+        } else { // maintain
+            // Классический баланс для поддержания
+            pRatio = 0.30; 
+            fRatio = 0.30; 
+            cRatio = 0.40; 
+        }
 
-        // БЖУ: Акцент на белок, меньше углеводов
-        const pGrams = Math.round((finalKcal * 0.30) / 4);
-        const fGrams = Math.round((finalKcal * 0.25) / 9);
-        const cGrams = Math.round((finalKcal - (pGrams * 4) - (fGrams * 9)) / 4);
+        finalKcal = Math.round(finalKcal);
 
+        // Перевод процентов в граммы (Белки и Углеводы по 4 ккал на грамм, Жиры по 9 ккал)
+        const pGrams = Math.round((finalKcal * pRatio) / 4);
+        const fGrams = Math.round((finalKcal * fRatio) / 9);
+        const cGrams = Math.round((finalKcal * cRatio) / 4);
+
+        // Вывод на экран
         document.getElementById('resKcal').innerText = finalKcal;
         document.getElementById('resP').innerText = pGrams + 'г';
         document.getElementById('resF').innerText = fGrams + 'г';
         document.getElementById('resC').innerText = cGrams + 'г';
 
+        // Показываем блок с результатами
         document.getElementById('resultsArea').style.display = 'block';
     }
 </script>
