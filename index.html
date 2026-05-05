@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NutriCalc</title>
+    <title>NutriCalc — Твой КБЖУ</title>
     <style>
         :root {
             --accent: #007AFF;
@@ -28,7 +28,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            transition: all 0.3s ease;
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
 
         body {
@@ -76,6 +76,8 @@
             padding: 10px;
             text-align: center;
             cursor: pointer;
+            border: none;
+            background: none;
             border-radius: 10px;
             font-weight: 600;
             font-size: 13px;
@@ -119,6 +121,7 @@
             font-weight: 600;
             outline: none;
             width: 100%;
+            -webkit-appearance: none;
         }
 
         input:focus, select:focus {
@@ -155,6 +158,12 @@
             padding: 20px;
             display: none;
             border: 1px solid var(--border);
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .res-main {
@@ -190,21 +199,23 @@
         }
 
         .macro-card div:first-child {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--accent);
         }
 
         .macro-card div:last-child {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-dim);
             font-weight: 700;
             text-transform: uppercase;
+            margin-top: 4px;
         }
 
         @media (max-width: 400px) {
             .grid-inputs { grid-template-columns: 1fr; }
             .full-width { grid-column: span 1; }
+            .container { padding: 20px; }
         }
     </style>
 </head>
@@ -222,34 +233,34 @@
 
     <div class="grid-inputs">
         <div class="input-group">
-            <label>Возраст (лет)</label>
-            <input type="number" id="age" value="21" min="10" max="120">
+            <label>Возраст</label>
+            <input type="number" id="age" value="21" inputmode="numeric">
         </div>
         <div class="input-group">
             <label>Рост (см)</label>
-            <input type="number" id="height" value="178" min="100" max="250">
+            <input type="number" id="height" value="178" inputmode="numeric">
         </div>
         <div class="input-group">
             <label>Вес (кг)</label>
-            <input type="number" id="weight" value="77" min="30" max="250">
+            <input type="number" id="weight" value="77" inputmode="decimal">
         </div>
 
         <div class="input-group full-width">
             <label>Уровень активности</label>
             <select id="activity">
-                <option value="1.2">Минимальная (сидячая работа, без тренировок)</option>
-                <option value="1.375" selected>Низкая (1-3 тренировки в неделю)</option>
+                <option value="1.2">Минимальная (сидячая работа)</option>
+                <option value="1.375" selected>Низкая (1-3 тренировки)</option>
                 <option value="1.55">Средняя (3-5 тренировок)</option>
                 <option value="1.725">Высокая (ежедневно)</option>
-                <option value="1.9">Экстремальная (профессиональный спорт)</option>
+                <option value="1.9">Экстремальная (проф. спорт)</option>
             </select>
         </div>
 
         <div class="input-group full-width">
             <label>Ваша цель</label>
             <select id="goal">
-                <option value="loss" selected>Похудение (дефицит 15%)</option>
-                <option value="maintain">Поддержание веса</option>
+                <option value="loss">Похудение (дефицит 15%)</option>
+                <option value="maintain" selected>Поддержание веса</option>
                 <option value="gain">Набор массы (профицит 15%)</option>
             </select>
         </div>
@@ -280,7 +291,7 @@
 </div>
 
 <script>
-    let currentGender = 'male'; // 'male' or 'female'
+    let currentGender = 'male';
 
     function setGender(gender) {
         currentGender = gender;
@@ -298,81 +309,61 @@
             btnF.classList.remove('active');
         }
         
-        // Если результаты уже показаны, пересчитываем с новым полом
         if (document.getElementById('resultsArea').style.display === 'block') {
             calculate();
         }
     }
 
     function calculate() {
-        // Получаем значения
         const weight = parseFloat(document.getElementById('weight').value);
         const height = parseFloat(document.getElementById('height').value);
         const age = parseInt(document.getElementById('age').value);
         const activity = parseFloat(document.getElementById('activity').value);
-        const goal = document.getElementById('goal').value; // 'loss', 'maintain', 'gain'
+        const goal = document.getElementById('goal').value;
         const isMale = (currentGender === 'male');
 
-        // Проверка на корректность
-        if (isNaN(weight) || isNaN(height) || isNaN(age) || weight <= 0 || height <= 0 || age <= 0) {
-            alert('Пожалуйста, заполните все поля корректными числами (возраст, рост, вес).');
+        if (!weight || !height || !age || weight <= 0 || height <= 0 || age <= 0) {
+            alert('Пожалуйста, введите корректные данные.');
             return;
         }
 
-        // ---------- 1. BMR (Миффлин-Сан Жеор) ----------
+        // 1. Расчет BMR (Миффлин-Сан Жеор)
         const genderModifier = isMale ? 5 : -161;
         const bmr = (10 * weight) + (6.25 * height) - (5 * age) + genderModifier;
 
-        // ---------- 2. TDEE ----------
+        // 2. Расчет TDEE (поддержание)
         const tdee = bmr * activity;
 
-        // ---------- 3. Целевые калории в зависимости от цели ----------
+        // 3. Целевые калории
         let targetCalories;
-        if (goal === 'loss') {
-            targetCalories = tdee * 0.85;
-        } else if (goal === 'gain') {
-            targetCalories = tdee * 1.15;
-        } else { // maintain
-            targetCalories = tdee;
-        }
+        if (goal === 'loss') targetCalories = tdee * 0.85;
+        else if (goal === 'gain') targetCalories = tdee * 1.15;
+        else targetCalories = tdee;
 
-        // ---------- 4. Белки (г/кг) ----------
-        let proteinPerKg;
-        if (isMale) {
-            if (goal === 'loss') proteinPerKg = 2.2;
-            else if (goal === 'gain') proteinPerKg = 1.8;
-            else proteinPerKg = 2.0; // maintain
-        } else {
-            if (goal === 'loss') proteinPerKg = 1.8;
-            else if (goal === 'gain') proteinPerKg = 1.5;
-            else proteinPerKg = 1.6; // maintain
-        }
+        // --- НОВАЯ ЛОГИКА БЖУ ---
+
+        // 1. Белок стабильно 2.0 г/кг
+        const proteinPerKg = 2.0;
         const proteinGrams = weight * proteinPerKg;
 
-        // ---------- 5. Жиры (г/кг) ----------
-        const fatPerKg = isMale ? 1.0 : 1.1;
+        // 2. Жиры: на наборе 1.2 г/кг, иначе 0.9 г/кг
+        const fatPerKg = (goal === 'gain') ? 1.2 : 0.9;
         const fatGrams = weight * fatPerKg;
 
-        // ---------- 6. Углеводы (остаток) ----------
-        const proteinCalories = proteinGrams * 4;
-        const fatCalories = fatGrams * 9;
-        const carbsCalories = targetCalories - (proteinCalories + fatCalories);
-        let carbsGrams = carbsCalories / 4;
-        if (carbsGrams < 0) carbsGrams = 0; // защита от отрицательных углеводов
+        // 3. Углеводы — остаток калорийности
+        const proteinCal = proteinGrams * 4;
+        const fatCal = fatGrams * 9;
+        const carbsCal = targetCalories - (proteinCal + fatCal);
+        
+        // Защита от отрицательных углей через Math.max
+        const carbsGrams = Math.max(carbsCal / 4, 0);
 
-        // Округление до целых
-        const finalKcal = Math.round(targetCalories);
-        const finalProtein = Math.round(proteinGrams);
-        const finalFat = Math.round(fatGrams);
-        const finalCarbs = Math.round(carbsGrams);
+        // Вывод результатов с округлением
+        document.getElementById('resKcal').innerText = Math.round(targetCalories);
+        document.getElementById('resP').innerText = Math.round(proteinGrams);
+        document.getElementById('resF').innerText = Math.round(fatGrams);
+        document.getElementById('resC').innerText = Math.round(carbsGrams);
 
-        // Вывод на экран
-        document.getElementById('resKcal').innerText = finalKcal;
-        document.getElementById('resP').innerText = finalProtein;
-        document.getElementById('resF').innerText = finalFat;
-        document.getElementById('resC').innerText = finalCarbs;
-
-        // Показать блок результатов
         document.getElementById('resultsArea').style.display = 'block';
     }
 </script>
