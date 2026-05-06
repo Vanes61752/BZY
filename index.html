@@ -309,12 +309,13 @@
             btnF.classList.remove('active');
         }
         
+        // Пересчет при смене пола (скрытый режим без алертов)
         if (document.getElementById('resultsArea').style.display === 'block') {
-            calculate();
+            calculate(true);
         }
     }
 
-    function calculate() {
+    function calculate(isAuto = false) {
         const weight = parseFloat(document.getElementById('weight').value);
         const height = parseFloat(document.getElementById('height').value);
         const age = parseInt(document.getElementById('age').value);
@@ -322,8 +323,13 @@
         const goal = document.getElementById('goal').value;
         const isMale = (currentGender === 'male');
 
+        // Валидация
         if (!weight || !height || !age || weight <= 0 || height <= 0 || age <= 0) {
-            alert('Пожалуйста, введите корректные данные.');
+            if (!isAuto) {
+                alert('Пожалуйста, введите корректные данные (рост, вес, возраст).');
+            } else {
+                document.getElementById('resultsArea').style.display = 'none';
+            }
             return;
         }
 
@@ -340,22 +346,20 @@
         else if (goal === 'gain') targetCalories = tdee * 1.15;
         else targetCalories = tdee;
 
-        // --- НОВАЯ ЛОГИКА БЖУ ---
-
-        // 1. Белок стабильно 2.0 г/кг
+        // 4. Белок стабильно 2.0 г/кг
         const proteinPerKg = 2.0;
         const proteinGrams = weight * proteinPerKg;
 
-        // 2. Жиры: на наборе 1.2 г/кг, иначе 0.9 г/кг
+        // 5. Жиры: на наборе 1.2 г/кг, иначе 0.9 г/кг
         const fatPerKg = (goal === 'gain') ? 1.2 : 0.9;
         const fatGrams = weight * fatPerKg;
 
-        // 3. Углеводы — остаток калорийности
+        // 6. Углеводы — остаток калорийности
         const proteinCal = proteinGrams * 4;
         const fatCal = fatGrams * 9;
         const carbsCal = targetCalories - (proteinCal + fatCal);
         
-        // Защита от отрицательных углей через Math.max
+        // Защита от отрицательных углей
         const carbsGrams = Math.max(carbsCal / 4, 0);
 
         // Вывод результатов с округлением
@@ -366,6 +370,15 @@
 
         document.getElementById('resultsArea').style.display = 'block';
     }
+
+    // Автоматический пересчет на лету при изменении любых данных
+    document.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('input', () => {
+            if (document.getElementById('resultsArea').style.display === 'block') {
+                calculate(true); 
+            }
+        });
+    });
 </script>
 
 </body>
